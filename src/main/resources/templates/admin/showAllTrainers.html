@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainers List</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+            crossorigin="anonymous">
+</head>
+<body style="background-color: #eeeeee">
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/admin">FTrainer</a>
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <h2>Trainers List</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <!-- Add more columns as needed -->
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Loop through the list of trainers -->
+        <tr th:each="trainer : ${trainers}">
+            <td th:text="${trainer.id}"></td>
+            <td th:text="${trainer.username}"></td>
+            <td th:text="${trainer.email}"></td>
+            <!-- Add more columns as needed -->
+            <td>
+                <form th:action="@{/user/{id}/editForm(id=${trainer.id})}" method="get">
+                    <input type="hidden" name="userId" th:value="${trainer.id}" />
+                    <button type="submit" class="btn btn-danger">Edit</button>
+                </form>
+            </td>
+            <td>
+                <form th:action="@{/admin/{id}/delete(id=${trainer.id})}" method="post">
+                    <input type="hidden" name="userId" th:value="${trainer.id}" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
