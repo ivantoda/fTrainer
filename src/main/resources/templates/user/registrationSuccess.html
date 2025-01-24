@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- your head content here -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTrainer Login</title>
+    <link rel="icon" href="/images/title_logo.png" type="image/png">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body>
-<div class="container">
-    <h2>Registration Successful</h2>
-    <p>Your registration was successful! You can now <a th:href="@{/user/login}">log in</a>.</p>
+<body class= "login-body">
+<header class="index-header">
+    <a href="/"><img th:src="@{/images/trainer_logo.png}" class="logo-image-home" alt="FTrainer Home"></a>
+</header>
+<div class="login-div" style="margin-top:20px">
+    <div><h2>Registration Successful</h2></div>
+    <div><p style="font-size=20px;">Your registration was successful! You can now <a th:href="@{/user/login}">log in</a>.</p></div>
 </div>
 </body>
 </html>

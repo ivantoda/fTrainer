@@ -6,6 +6,10 @@ import com.ftrainer.ftrainer.repositories.UserRepository;
 import javassist.NotFoundException;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,4 +43,21 @@ public class AdminServiceImpl implements AdminService{
     public void deleteUserById(Integer id) {
         userRepository.findById(id).ifPresent(userRepository::delete);
     }
+
+    @Override
+    public Page<User> findPaginated(int pageNo, int pageSize){
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
+        return this.userRepository.findByUserRole_name("CLIENT",pageable);
+    }
+
+    public Page<User> findAllClientsSortedByLastNameAsc(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("Lastname").ascending());
+        return userRepository.findByUserRole_name("CLIENT", pageable);
+    }
+
+    public Page<User> findAllClientsSortedByLastNameDesc(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("Lastname").descending());
+        return userRepository.findByUserRole_name("CLIENT", pageable);
+    }
+
 }

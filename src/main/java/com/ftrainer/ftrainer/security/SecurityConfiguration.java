@@ -22,7 +22,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfiguration {
+public class SecurityConfiguration{
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -56,7 +56,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain formLoginFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/user/register", "/user/registrationSuccess", "/user/addUser").permitAll()
+                        .requestMatchers("/", "/user/register", "/user/registrationSuccess", "/user/addUser", "/css/**", "/js/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

@@ -1,49 +1,111 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title>Add User</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous">
-</head>
-<body>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTrainer Register</title>
+    <link rel="icon" href="/images/title_logo.png" type="image/png">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <script defer>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.querySelector("form");
+            const messageElement = document.getElementById("message");
+            const messageElement2 = document.getElementById("message2");
 
-<h1>Registration</h1>
+            form.addEventListener("submit", function (event) {
+                const inputs = form.querySelectorAll("input, select");
+                let isValid = true;
+                let errorMessage = "";
+
+                inputs.forEach(input => {
+                    if (input.type !== "hidden" && input.value.trim() === "") {
+                        isValid = false;
+                        errorMessage = "Please fill out all fields!";
+                    }
+                });
+
+                const password = document.getElementById("password").value;
+                const rPassword = document.getElementById("rPassword").value;
+                if (password !== rPassword) {
+                    isValid = false;
+                    errorMessage = "Passwords do not match!";
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                    messageElement.style.color = "red";
+                    messageElement.textContent = errorMessage;
+                    messageElement2.textContent = "";
+                } else {
+                    messageElement.textContent = "";
+                    messageElement2.textContent = "";
+                }
+            });
+        });
+</script>
+</head>
+<body class="login-body">
+
+<header class="index-header">
+    <a href="/"><img th:src="@{/images/trainer_logo.png}" class="logo-image-home" alt="FTrainer Home"></a>
+</header>
+
+<div class = "registration-div">
+    <label style="font-size: 25px; margin: 20px">Registration</label>
 <form th:action="@{/user/addUser}" th:object="${userPayload}" method="post">
     <input type="hidden" th:field="*{id}" />
-
-    <label for="username">Username:</label>
-    <input type="text" th:field="*{username}" /><br><br>
-
-    <label for="firstname">First Name:</label>
-    <input type="text" th:field="*{firstname}" /><br><br>
-
-    <label for="lastname">Last Name:</label>
-    <input type="text" th:field="*{lastname}" /><br><br>
-
-    <label for="email">Email:</label>
-    <input type="email" th:field="*{email}" /><br><br>
-
-    <label for="password">Password:</label>
-    <input type="password" th:field="*{password}" /><br><br>
-
-    <label for="dateOfBirth">Date of Birth:</label>
-    <input type="date" th:field="*{dateOfBirth}" /><br><br>
-
+    <div>
+        <label for="username">Username: </label>
+            <input type="text" th:field="*{username}" style="margin: 10px;"/>
+    </div>
+    <div>
+        <label for="firstname">First Name: </label>
+        <input type="text" th:field="*{firstname}" style="margin: 10px;"/>
+    </div>
+    <div>
+        <label for="lastname">Last Name: </label>
+        <input type="text" th:field="*{lastname}" style="margin: 10px;"/>
+    </div>
+    <div>
+        <label for="email">Email: </label>
+        <input type="email" th:field="*{email}" style="margin: 10px;"/>
+    </div>
+    <div>
+        <label for="password">Password: </label>
+        <input type="password" th:field="*{password}" id="password" style="margin: 10px;"/>
+    </div>
+    <div>
+        <label for="rPassword">Re-enter password: </label>
+        <input type="password" id="rPassword" style="margin: 10px;"/>
+    </div>
+    <div>
+        <label for="dateOfBirth">Date of birth: </label>
+        <input type="date" th:field="*{dateOfBirth}" id="date" style="margin: 10px;"/>
+    </div>
+    <div>
     <label for="userRole">User Role:</label>
-    <select class="form-select" id="role" th:field="*{userRole}">
+    <select class="form-select" id="role" th:field="*{userRole}" style="margin: 10px;">
         <option th:each="option: ${roleOptions}"
-                th:text="${option.name}" th:value="${option.name}"
-        ></option>
-    </select><br><br><br>
-
-    <button type="submit">Register</button>
-
+                th:text="${option.name}" th:value="${option.name}">
+        </option>
+    </select>
+    </div>
+    <button type="submit" style="margin: 10px;">Register</button>
+    <div class="form-actions row justify-content-center">
+        <div class="form-actions col-sm-1">
+            <a th:href="@{/}">
+                <button type="button" style="background-color: rgb(200,0,0); margin-top: 20px"> Home page </button>
+            </a>
+        </div>
+    </div>
 </form>
-<div th:if="${error}" class="alert alert-danger" role="alert">
-    <p th:text="${error}"></p>
+<div>
+    <p id="message" style="font-weight: bold; font-family: Helvetica"></p>
+</div>
+<div th:if="${error}" class="alert alert-danger" role="alert" >
+    <p th:text="${error}" id ="message2" style="font-weight: bold; font-family: Helvetica; color: red"></p>
+</div>
 </div>
 </body>
 </html>

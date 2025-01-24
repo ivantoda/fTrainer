@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <title>FTrainer</title>
+    <link rel="icon" href="/images/title_logo.png" type="image/png">
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body>
+<body class="indexBody">
+<div>
+    <header class="index-header">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <img th:src="@{/images/trainer_logo.png}" class="logo-image" alt="FTrainer Logo">
+    </header>
+    <div class="container">
+        <div class ="left-div">
+            <p>
+            It's easy to envision your fitness goals, but the journey to achieving them isn't always straightforward.
+            If you have the will, we're here to guide you!</p>
 
-<h1>FITNESS-TRAINER</h1>
-<a th:href="@{/user/login}">Log in</a>
-<a th:href="@{/user/register}">Register here!!</a>
+            <p><b>FTrainer is a platform designed to simplify the process of finding the perfect personal trainer to match your fitness goals.</b></p>
+        </div>
+        <div class="right-div">
+            <p>
+                Already a user?
+                <a th:href="@{/user/login}">
+                    <button type="button"> Log in! </button>
+                </a>
+            </p>
+            <br>
+            <p>
+                Not our user?
+                <a th:href="@{/user/register}">
+                    <button type="button"> Register here! </button>
+                </a>
+            </p>
+        </div>
+    </div>
 </body>
 </html>

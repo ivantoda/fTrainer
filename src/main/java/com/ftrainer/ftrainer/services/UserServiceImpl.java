@@ -6,6 +6,7 @@ import com.ftrainer.ftrainer.repositories.RoleRepository;
 import com.ftrainer.ftrainer.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.text.ParseException;
