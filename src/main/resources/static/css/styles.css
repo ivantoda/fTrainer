@@ -181,6 +181,15 @@ button {
     border-radius: 20px;
 }
 
+.navbar-logout{
+    font-family: "Helvetica", monospace;
+    font-size:20px;
+    background-color: rgba(200,0,0,0.6);
+    padding: 10px;
+    border-radius: 20px;
+    color: black;
+}
+
 .pagination {
     display: flex;
     justify-content: center;

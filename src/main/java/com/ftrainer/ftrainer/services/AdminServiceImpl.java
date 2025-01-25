@@ -38,25 +38,25 @@ public class AdminServiceImpl implements AdminService{
     public List<User> getTrainers() {
         return userRepository.findByUserRole_name("TRAINER");
     }
-
     @Override
     public void deleteUserById(Integer id) {
         userRepository.findById(id).ifPresent(userRepository::delete);
     }
 
-    @Override
-    public Page<User> findPaginated(int pageNo, int pageSize){
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return this.userRepository.findByUserRole_name("CLIENT",pageable);
-    }
 
-    public Page<User> findAllClientsSortedByLastNameAsc(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("Lastname").ascending());
+    public Page<User> findAllClientsSortedByFirstnameAsc(String searchKeyword, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("Firstname").ascending());
+        if (searchKeyword != null && !searchKeyword.isBlank()) {
+            return userRepository.findByUsernameContainingIgnoreCaseOrFirstnameContainingIgnoreCaseOrLastnameContainingIgnoreCase(searchKeyword, searchKeyword, searchKeyword, pageable);
+        }
         return userRepository.findByUserRole_name("CLIENT", pageable);
     }
 
-    public Page<User> findAllClientsSortedByLastNameDesc(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("Lastname").descending());
+    public Page<User> findAllClientsSortedByFirstnameDesc(String searchKeyword, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("Firstname").descending());
+        if (searchKeyword != null && !searchKeyword.isBlank()) {
+            return userRepository.findByUsernameContainingIgnoreCaseOrFirstnameContainingIgnoreCaseOrLastnameContainingIgnoreCase(searchKeyword, searchKeyword, searchKeyword, pageable);
+        }
         return userRepository.findByUserRole_name("CLIENT", pageable);
     }
 

@@ -67,13 +67,15 @@ public class AdminController {
     @GetMapping("/showAllClients/{pageNo}")
     public String findPaginated(  @PathVariable(value = "pageNo") int pageNo,
                                   @RequestParam(value = "sortOrder", defaultValue = "asc") String sortOrder,
+                                 @RequestParam(value="searchKeyword", required = false, defaultValue="") String searchKeyWord,
                                  Model model) {
-        int pageSize = 10;
+        int pageSize = 5;
         Page<User> page;
+
         if ("desc".equalsIgnoreCase(sortOrder)) {
-            page = adminService.findAllClientsSortedByLastNameDesc(pageNo, pageSize);
+            page = adminService.findAllClientsSortedByFirstnameDesc(searchKeyWord, pageNo, pageSize);
         } else {
-            page = adminService.findAllClientsSortedByLastNameAsc(pageNo, pageSize);
+            page = adminService.findAllClientsSortedByFirstnameAsc(searchKeyWord, pageNo, pageSize);
         }
 
         List<User> listClients = page.getContent();
@@ -83,6 +85,7 @@ public class AdminController {
         model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("listClients", listClients);
         model.addAttribute("sortOrder", sortOrder);
+        model.addAttribute("searchKeyword", searchKeyWord);
 
         return "/admin/showAllClients";
     }

@@ -29,12 +29,12 @@ public class ClientServiceImpl implements ClientService{
 
     @Override
     public List<User> getTrainersAsc() {
-        return userRepository.findByUserRole_nameOrderByFirstnameAsc("TRAINER");
+        return userRepository.findByUserRole_nameOrderByLastnameAsc("TRAINER");
     }
 
 
     @Override
     public List<User> getTrainersDesc() {
-        return userRepository.findByUserRole_nameOrderByFirstnameDesc("TRAINER");
+        return userRepository.findByUserRole_nameOrderByLastnameDesc("TRAINER");
     }
 }

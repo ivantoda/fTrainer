@@ -14,15 +14,25 @@
     <h1>Clients List</h1>
     <div clas="navbar-right">
         <span class="navbar-text">Hello, <span th:text="${#authentication.name}"></span></span>
-        <a class="navbar-text" th:href="@{/logout}" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
+        <a class="navbar-logout" th:href="@{/logout}" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
         </div>
 </nav>
 
 <div class="sorting-options" style="margin-bottom: 20px; margin-right: 20px; display: flex; justify-content: right;">
-    <label style="margin: 10px; font-size: 18px">Sort By: </label>
-    <form method="get" th:action="@{/admin/showAllClients/{pageNo}(pageNo=${currentPage})}" style="width:20%">
-        <input type="hidden" name="pageNo" th:value="${currentPage}">
-        <select name="sortOrder" onchange="this.form.submit()">
+    <div>
+        <form method="get" th:action="@{'/admin/showAllClients/1'}">
+            <input type="text" name="searchKeyword" th:value="${searchKeyword}" placeholder="Search clients..." />
+            <input type="hidden" name="sortOrder" th:value="${sortOrder}" />
+            <button type="submit" style="font-size: 18px;">Search</button>
+            <a th:href="@{/admin/showAllClients/1}">
+                <button type="button" style="background-color: rgba(200,0,0,0.6); font-size: 18px; color: black"> Reset </button>
+            </a>
+        </form>
+    </div>
+    <label style="margin: 10px; font-size: 18px;">Sort By: </label>
+    <form method="get" th:action="@{'/admin/showAllClients/' + ${currentPage}}">
+        <input type="hidden" name="searchKeyword" th:value="${searchKeyword}" />
+        <select name="sortOrder" onchange="this.form.submit()" style="width: 100%">
             <option th:value="asc" th:selected="${sortOrder == 'asc'}">Ascending</option>
             <option th:value="desc" th:selected="${sortOrder == 'desc'}">Descending</option>
         </select>
@@ -65,14 +75,18 @@
             Total Users: [[${totalItems}]] </div>
     <div>
         <div th:if = "${totalPages > 1}" class="pagination" >
-            <a th:if="${currentPage > 1}" th:href="@{'/admin/showAllClients/' + ${currentPage - 1} + '?sortOrder=' + ${sortOrder}}"  style="margin-left: 10px;">Previous</a>
+            <a th:if="${currentPage > 1}" th:href="@{'/admin/showAllClients/1' + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin-left: 10px;">First</a>
+            <span th:unless="${currentPage > 1}" style="margin-left: 10px; font-weight: bold;">First</span>
+            <a th:if="${currentPage > 1}" th:href="@{'/admin/showAllClients/' + ${currentPage - 1} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin-left: 10px;">Previous</a>
             <span th:unless="${currentPage > 1}" style="margin-left: 10px; font-weight: bold;">Previous</span>
             <span th:each="i : ${#numbers.sequence(1, totalPages)}">
-                <a th:if="${currentPage != i}" th:href="@{'/admin/showAllClients/' + ${i} + '?sortOrder=' + ${sortOrder}}"  style="margin: 0 5px; text-decoration: none;">[[${i}]]</a>
+                <a th:if="${currentPage != i}" th:href="@{'/admin/showAllClients/' + ${i} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin: 0 5px; text-decoration: none;">[[${i}]]</a>
                 <span th:unless="${currentPage != i}" style="margin: 0 5px; font-weight: bold;">[[${i}]]</span>
             </span>
-                <a th:if="${currentPage < totalPages}" th:href="@{'/admin/showAllClients/' + ${currentPage + 1} + '?sortOrder=' + ${sortOrder}}" style="margin-left: 10px;">Next</a>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/admin/showAllClients/' + ${currentPage + 1} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}" style="margin-left: 10px;">Next</a>
                 <span th:unless="${currentPage < totalPages}" style="margin-left: 10px; font-weight: bold;">Next</span>
+            <a th:if="${currentPage < totalPages}" th:href="@{'/admin/showAllClients/' + ${totalPages} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}" style="margin-left: 10px;">Last</a>
+            <span th:unless="${currentPage < totalPages}" style="margin-left: 10px; font-weight: bold;">Last</span>
         </div></div>
     </div>
 </div></div>
