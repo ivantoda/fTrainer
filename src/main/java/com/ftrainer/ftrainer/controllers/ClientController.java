@@ -5,6 +5,7 @@ import com.ftrainer.ftrainer.entities.*;
 import com.ftrainer.ftrainer.repositories.*;
 import com.ftrainer.ftrainer.services.*;
 import javassist.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -31,9 +31,11 @@ public class ClientController {
 
     private final ClientRequestService clientRequestService;
     private final UserRepository userRepository;
+    @Autowired
+    private final WebSocketController webSocketController;
 
     public ClientController(UserService userService, RoleRepository roleRepository, ClientService clientService, ExerciseRepository exerciseRepository, SetExerciseRepository setExerciseRepository, ProgramRepository programRepository, ClientRequestService clientRequestService,
-                            UserRepository userRepository) {
+                            UserRepository userRepository, WebSocketController webSocketController) {
         this.userService = userService;
         this.roleRepository = roleRepository;
         this.clientService = clientService;
@@ -42,6 +44,7 @@ public class ClientController {
         this.programRepository = programRepository;
         this.clientRequestService = clientRequestService;
         this.userRepository = userRepository;
+        this.webSocketController = webSocketController;
     }
 
     @PreAuthorize("hasAnyAuthority('CLIENT')")
@@ -92,6 +95,10 @@ public class ClientController {
             clientRequest.setDescription(requestPayload.getDescription());
 
             clientRequestService.createRequest(clientRequest);
+
+            String notificationMessage = "New request from client: " + clientUser.getUsername();
+            webSocketController.sendNotification(notificationMessage);
+
             return "redirect:/client";
         } else {
             return "redirect:/error";

@@ -197,6 +197,25 @@ button {
     font-size: 16px;
 }
 
+.notifications {
+    font-family: "Helvetica", monospace;
+    background-color: rgba(200,200,200,0.4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+    font-size: 16px;
+    width: 30%;
+    border-radius:20px;
+    border: 2px solid rgba(200,200,200,0.8);
+}
+
+.trainer-div-index{
+    display: flex;
+    justify-content: space-between;;
+    padding:10px;
+}
+
 .pagination-button {
     color: black;
     margin: 0 5px;

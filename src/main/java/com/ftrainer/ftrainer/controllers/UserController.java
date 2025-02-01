@@ -55,8 +55,7 @@ public class UserController {
                 return "redirect:/user/register";
             }
 
-            var user = userService.addUser(userPayload);
-            userRepository.save(user);
+            userService.addUser(userPayload);
             return "redirect:/user/registrationSuccess";
         } catch (SecurityException e) {
             redirectAttributes.addFlashAttribute("error", "Unauthorized: " + e.getMessage());

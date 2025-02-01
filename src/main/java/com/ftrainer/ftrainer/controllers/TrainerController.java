@@ -2,10 +2,8 @@ package com.ftrainer.ftrainer.controllers;
 
 import com.ftrainer.ftrainer.dto.ExercisePayload;
 import com.ftrainer.ftrainer.entities.*;
-import com.ftrainer.ftrainer.repositories.ExerciseRepository;
-import com.ftrainer.ftrainer.repositories.ProgramRepository;
-import com.ftrainer.ftrainer.repositories.SetExerciseRepository;
-import com.ftrainer.ftrainer.repositories.UserRepository;
+import com.ftrainer.ftrainer.repositories.*;
+import com.ftrainer.ftrainer.security.JwtUtil;
 import com.ftrainer.ftrainer.services.ClientRequestService;
 import com.ftrainer.ftrainer.services.ExerciseService;
 import com.ftrainer.ftrainer.services.ProgramService;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,13 +36,15 @@ public class TrainerController {
     private final ProgramRepository programRepository;
     private final SetExerciseRepository setExerciseRepository;
     private final ExerciseRepository exerciseRepository;
+    private final ClientRequestRepository clientRequestRepository;
 
     @Autowired
     public TrainerController(ExerciseService exerciseService, ClientRequestService clientRequestService,
                              UserRepository userRepository, ProgramService programService,
                              SetExerciseService setExerciseService, ProgramRepository programRepository,
                              SetExerciseRepository setExerciseRepository,
-                             ExerciseRepository exerciseRepository) {
+                             ExerciseRepository exerciseRepository,
+                             ClientRequestRepository clientRequestRepository) {
         this.exerciseService = exerciseService;
         this.clientRequestService = clientRequestService;
         this.userRepository = userRepository;
@@ -52,11 +53,15 @@ public class TrainerController {
         this.programRepository = programRepository;
         this.setExerciseRepository = setExerciseRepository;
         this.exerciseRepository = exerciseRepository;
+        this.clientRequestRepository = clientRequestRepository;
     }
 
     @PreAuthorize("hasAnyAuthority('TRAINER')")
     @GetMapping()
-    public String viewHomePage() {
+    public String viewHomePage(Model model) {
+        User trainer = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        String token = JwtUtil.generateToken(trainer.getId());
+        model.addAttribute("token", token);
         return "trainer/trainerIndex";
     }
 
@@ -187,6 +192,18 @@ public class TrainerController {
             programRepository.delete(program);
 
             return "redirect:/trainer/showAllPrograms";
+        }
+        return "redirect:/trainer/";
+    }
+    @PreAuthorize("hasAnyAuthority('TRAINER')")
+    @PostMapping("/deleteClientRequest/{requestId}")
+    public String deleteRequest(@PathVariable Integer requestId) {
+        ClientRequest clientRequest = clientRequestService.findById(requestId);
+        if (clientRequest != null) {
+
+            clientRequestRepository.delete(clientRequest);
+
+            return "redirect:/trainer/showAllRequests";
         }
         return "redirect:/trainer/";
     }

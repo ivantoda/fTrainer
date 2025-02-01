@@ -37,6 +37,11 @@ public class ClientRequestServiceImpl implements ClientRequestService{
     }
 
     @Override
+    public ClientRequest findById(Integer id) {
+        return clientRequestRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public List<ClientRequest> getClientRequestsByTrainer(User trainer) {
         return clientRequestRepository.findByTrainer(trainer);
     }

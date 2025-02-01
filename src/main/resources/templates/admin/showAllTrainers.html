@@ -5,59 +5,90 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trainers List</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous">
+    <link rel="icon" href="/images/title_logo.png" type="image/png">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body style="background-color: #eeeeee">
-<nav class="navbar navbar-expand-lg navbar-dark bg-success">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/admin">FTrainer</a>
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        </div>
+<body>
+<nav class = "nav-div">
+    <a href="/admin"><img th:src="@{/images/trainer_logo.png}" class="nav-logo-image-home" alt="FTrainer Home"></a>
+    <h1>Trainers List</h1>
+    <div clas="navbar-right">
+        <span class="navbar-text">Hello, <span th:text="${#authentication.name}"></span></span>
+        <a class="navbar-logout" th:href="@{/logout}" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
     </div>
 </nav>
-<div class="container">
-    <h2>Trainers List</h2>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Email</th>
-            <!-- Add more columns as needed -->
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Loop through the list of trainers -->
-        <tr th:each="trainer : ${trainers}">
-            <td th:text="${trainer.id}"></td>
-            <td th:text="${trainer.username}"></td>
-            <td th:text="${trainer.email}"></td>
-            <!-- Add more columns as needed -->
-            <td>
-                <form th:action="@{/user/{id}/editForm(id=${trainer.id})}" method="get">
-                    <input type="hidden" name="userId" th:value="${trainer.id}" />
-                    <button type="submit" class="btn btn-danger">Edit</button>
-                </form>
-            </td>
-            <td>
-                <form th:action="@{/admin/{id}/delete(id=${trainer.id})}" method="post">
-                    <input type="hidden" name="userId" th:value="${trainer.id}" />
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
+<div class="sorting-options" style="margin-bottom: 20px; margin-right: 20px; display: flex; justify-content: right;">
+    <div>
+        <form method="get" th:action="@{'/admin/showAllTrainers/1'}">
+            <input type="text" name="searchKeyword" th:value="${searchKeyword}" placeholder="Search trainers..." />
+            <input type="hidden" name="sortOrder" th:value="${sortOrder}" />
+            <button type="submit" style="font-size: 18px;">Search</button>
+            <a th:href="@{/admin/showAllTrainers/1}">
+                <button type="button" style="background-color: rgba(200,0,0,0.6); font-size: 18px; color: black"> Reset </button>
+            </a>
+        </form>
+    </div>
+    <label style="margin: 10px; font-size: 18px;">Sort By: </label>
+    <form method="get" th:action="@{'/admin/showAllTrainers/' + ${currentPage}}">
+        <input type="hidden" name="searchKeyword" th:value="${searchKeyword}" />
+        <select name="sortOrder" onchange="this.form.submit()" style="width: 100%">
+            <option th:value="asc" th:selected="${sortOrder == 'asc'}">Ascending</option>
+            <option th:value="desc" th:selected="${sortOrder == 'desc'}">Descending</option>
+        </select>
+    </form>
 </div>
+
+
+<div class="clients-list-div">
+    <div class="admin-list-users-div">
+        <table class="table table-striped" style="width: 100%;">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="trainer : ${listTrainers}">
+                <td th:text="${trainer.id}"></td>
+                <td th:text="${trainer.username}"></td>
+                <td th:text="${trainer.email}"></td>
+                <td>
+                    <form th:action="@{/user/{id}/editForm(id=${trainer.id})}" method="get">
+                        <input type="hidden" name="userId" th:value="${trainer.id}" />
+                        <button type="submit" class="btn btn-danger">Edit</button>
+                    </form>
+                </td>
+                <td>
+                    <form th:action="@{/admin/{id}/delete(id=${trainer.id})}" method="post">
+                        <input type="hidden" name="userId" th:value="${trainer.id}" />
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div style="font-size: 16px; margin: 15px;">
+            Total Users: [[${totalItems}]] </div>
+        <div>
+            <div th:if = "${totalPages > 1}" class="pagination" >
+                <a th:if="${currentPage > 1}" th:href="@{'/admin/showAllTrainers/1' + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin-left: 10px;">First</a>
+                <span th:unless="${currentPage > 1}" style="margin-left: 10px; font-weight: bold;">First</span>
+                <a th:if="${currentPage > 1}" th:href="@{'/admin/showAllTrainers/' + ${currentPage - 1} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin-left: 10px;">Previous</a>
+                <span th:unless="${currentPage > 1}" style="margin-left: 10px; font-weight: bold;">Previous</span>
+                <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}" th:href="@{'/admin/showAllTrainers/' + ${i} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin: 0 5px; text-decoration: none;">[[${i}]]</a>
+                <span th:unless="${currentPage != i}" style="margin: 0 5px; font-weight: bold;">[[${i}]]</span>
+            </span>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/admin/showAllTrainers/' + ${currentPage + 1} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}" style="margin-left: 10px;">Next</a>
+                <span th:unless="${currentPage < totalPages}" style="margin-left: 10px; font-weight: bold;">Next</span>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/admin/showAllTrainers/' + ${totalPages} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}" style="margin-left: 10px;">Last</a>
+                <span th:unless="${currentPage < totalPages}" style="margin-left: 10px; font-weight: bold;">Last</span>
+            </div></div>
+    </div>
+</div></div>
 </body>
 </html>

@@ -18,4 +18,7 @@ public interface AdminService {
 
     Page<User> findAllClientsSortedByFirstnameAsc(String searchKeyWord, int pageNo, int pageSize);
 
+    Page<User> findAllTrainersSortedByFirstnameDesc(String searchKeyWord, int pageNo, int pageSize);
+
+    Page<User> findAllTrainersSortedByFirstnameAsc(String searchKeyWord, int pageNo, int pageSize);
 }

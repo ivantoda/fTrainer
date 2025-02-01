@@ -14,5 +14,7 @@ public interface ClientRequestService {
 
     List<ClientRequest> findAll();
 
+    ClientRequest findById(Integer id);
+
     List<ClientRequest> getClientRequestsByTrainer(User trainer);
 }

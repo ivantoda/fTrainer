@@ -65,7 +65,7 @@ public class AdminController {
     }
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/showAllClients/{pageNo}")
-    public String findPaginated(  @PathVariable(value = "pageNo") int pageNo,
+    public String findPaginatedClients(  @PathVariable(value = "pageNo") int pageNo,
                                   @RequestParam(value = "sortOrder", defaultValue = "asc") String sortOrder,
                                  @RequestParam(value="searchKeyword", required = false, defaultValue="") String searchKeyWord,
                                  Model model) {
@@ -88,6 +88,33 @@ public class AdminController {
         model.addAttribute("searchKeyword", searchKeyWord);
 
         return "/admin/showAllClients";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/showAllTrainers/{pageNo}")
+    public String findPaginatedTrainers(  @PathVariable(value = "pageNo") int pageNo,
+                                  @RequestParam(value = "sortOrder", defaultValue = "asc") String sortOrder,
+                                  @RequestParam(value="searchKeyword", required = false, defaultValue="") String searchKeyWord,
+                                  Model model) {
+        int pageSize = 5;
+        Page<User> page;
+
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            page = adminService.findAllTrainersSortedByFirstnameDesc(searchKeyWord, pageNo, pageSize);
+        } else {
+            page = adminService.findAllTrainersSortedByFirstnameAsc(searchKeyWord, pageNo, pageSize);
+        }
+
+        List<User> listTrainers = page.getContent();
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listTrainers", listTrainers);
+        model.addAttribute("sortOrder", sortOrder);
+        model.addAttribute("searchKeyword", searchKeyWord);
+
+        return "/admin/showAllTrainers";
     }
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/{id}/delete")

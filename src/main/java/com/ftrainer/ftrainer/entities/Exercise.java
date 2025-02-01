@@ -1,12 +1,17 @@
 package com.ftrainer.ftrainer.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Table(name = "exercise")
 public class Exercise {
     @Id
@@ -21,4 +26,17 @@ public class Exercise {
     @Column(name = "description", nullable = false)
     @NotNull(message = "exercise_description shouldn't be null")
     private String description;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Exercise exercise = (Exercise) o;
+        return getId() != null && Objects.equals(getId(), exercise.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

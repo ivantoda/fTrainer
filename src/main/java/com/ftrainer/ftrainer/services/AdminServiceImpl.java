@@ -60,4 +60,24 @@ public class AdminServiceImpl implements AdminService{
         return userRepository.findByUserRole_name("CLIENT", pageable);
     }
 
+    @Override
+    public Page<User> findAllTrainersSortedByFirstnameDesc(String searchKeyword, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("Firstname").descending());
+        if (searchKeyword != null && !searchKeyword.isBlank()) {
+            return userRepository.findByUsernameContainingIgnoreCaseOrFirstnameContainingIgnoreCaseOrLastnameContainingIgnoreCase(searchKeyword, searchKeyword, searchKeyword, pageable);
+        }
+        return userRepository.findByUserRole_name("TRAINER", pageable);
+    }
+
+    @Override
+    public Page<User> findAllTrainersSortedByFirstnameAsc(String searchKeyword, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("Firstname").descending());
+        if (searchKeyword != null && !searchKeyword.isBlank()) {
+            return userRepository.findByUsernameContainingIgnoreCaseOrFirstnameContainingIgnoreCaseOrLastnameContainingIgnoreCase(searchKeyword, searchKeyword, searchKeyword, pageable);
+        }
+        return userRepository.findByUserRole_name("TRAINER", pageable);
+    }
+
+
+
 }
