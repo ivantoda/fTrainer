@@ -4,23 +4,24 @@ import com.ftrainer.ftrainer.dto.ExercisePayload;
 import com.ftrainer.ftrainer.entities.*;
 import com.ftrainer.ftrainer.repositories.*;
 import com.ftrainer.ftrainer.security.JwtUtil;
-import com.ftrainer.ftrainer.services.ClientRequestService;
-import com.ftrainer.ftrainer.services.ExerciseService;
-import com.ftrainer.ftrainer.services.ProgramService;
-import com.ftrainer.ftrainer.services.SetExerciseService;
+import com.ftrainer.ftrainer.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/trainer")
@@ -32,6 +33,8 @@ public class TrainerController {
 
     private final ProgramService programService;
 
+    private final UserService userService;
+
     private final SetExerciseService setExerciseService;
     private final ProgramRepository programRepository;
     private final SetExerciseRepository setExerciseRepository;
@@ -41,7 +44,7 @@ public class TrainerController {
     @Autowired
     public TrainerController(ExerciseService exerciseService, ClientRequestService clientRequestService,
                              UserRepository userRepository, ProgramService programService,
-                             SetExerciseService setExerciseService, ProgramRepository programRepository,
+                             UserService userService, SetExerciseService setExerciseService, ProgramRepository programRepository,
                              SetExerciseRepository setExerciseRepository,
                              ExerciseRepository exerciseRepository,
                              ClientRequestRepository clientRequestRepository) {
@@ -49,6 +52,7 @@ public class TrainerController {
         this.clientRequestService = clientRequestService;
         this.userRepository = userRepository;
         this.programService = programService;
+        this.userService = userService;
         this.setExerciseService = setExerciseService;
         this.programRepository = programRepository;
         this.setExerciseRepository = setExerciseRepository;
@@ -131,7 +135,9 @@ public class TrainerController {
         User trainer = userRepository.findByUsername(trainerName);
 
         List<ClientRequest> clientRequests = clientRequestService.getClientRequestsByTrainer(trainer);
+        List<User> clients = userService.findAllClients();
         model.addAttribute("clientRequests", clientRequests);
+        model.addAttribute("clients", clients);
 
         return "trainer/showAllClientRequests";
     }
@@ -196,15 +202,17 @@ public class TrainerController {
         return "redirect:/trainer/";
     }
     @PreAuthorize("hasAnyAuthority('TRAINER')")
-    @PostMapping("/deleteClientRequest/{requestId}")
-    public String deleteRequest(@PathVariable Integer requestId) {
+    @DeleteMapping("/deleteClientRequest/{requestId}")
+    public ResponseEntity<Map<String, String>> deleteRequest(@PathVariable Integer requestId) {
         ClientRequest clientRequest = clientRequestService.findById(requestId);
         if (clientRequest != null) {
-
             clientRequestRepository.delete(clientRequest);
 
-            return "redirect:/trainer/showAllRequests";
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Request deleted successfully!");
+            return ResponseEntity.ok(response);
         }
-        return "redirect:/trainer/";
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("error", "Request not found!"));
     }
 }

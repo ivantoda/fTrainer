@@ -4,54 +4,88 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Client Requests</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous">
+    <title>FTrainer Client</title>
+    <link rel="icon" href="/images/title_logo.png" type="image/png">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body>
-
-<nav class="navbar navbar-expand-lg navbar-dark bg-success">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/trainer">FTrainer</a>
-        <button class="navbar-toggler" type="button"
-                data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        </div>
+<body class ="indexBody">
+<nav class = "nav-div">
+    <a href="/client"><img th:src="@{/images/trainer_logo.png}" class="nav-logo-image-home" alt="FTrainer Home"></a>
+    <div clas="navbar-right">
+        <span class="navbar-text">Hello, <b><span th:text="${#authentication.name}"></span></b></span>
+        <a class="navbar-logout" th:href="@{/logout}" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
     </div>
 </nav>
-
-<div class="container">
-    <h2>All Client Requests</h2>
-    <table class="table">
+<div style="margin:20px;">
+    <h2>All Client Requests</h2></div>
+    <div style="display: flex; justify-content: center">
+    <div style="display:flex; justify-content:center; border-radius: 20px; background-color: rgba(100, 100, 100, 0.2); width: 60%; padding:10px;">
+        <table class="table">
         <thead>
         <tr>
-            <th>Request ID</th>
-            <th>Client ID</th>
+            <th>Client's Username</th>
             <th>Description</th>
+            <th colspan="2">Actions</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="request : ${clientRequests}">
-            <td th:text="${request.id}"></td>
-            <td th:text="${request.client.id}"></td>
+        <tr th:each="request : ${clientRequests}" th:id="'request-' + ${request.id}">
+            <td><span th:each="client : ${clients}"
+                  th:if="${client.id == request.client.id}"
+                  th:text="${client.username}">
+        </span></td>
             <td th:text="${request.description}"></td>
-            <td><form th:action="@{/trainer/writeProgram/{clientId}/{trainerId}(clientId=${request.client.id},trainerId=${request.trainer.id})}" method="get">
-                <button type="submit" class="btn btn-danger">Write program</button>
-            </form></td>
-            <td> <form th:action="@{/trainer/deleteClientRequest/{requestId}(requestId=${request.id})}" method="post">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this request?');">Delete request</button>
-            </form></td>
+            <td>
+                <form th:action="@{/trainer/writeProgram/{clientId}/{trainerId}(clientId=${request.client.id},trainerId=${request.trainer.id})}" method="get">
+                    <button type="submit" class="pagination-button">Write program</button>
+                </form>
+            </td>
+            <td>
+                <button class="pagination-button" style="background-color: red" th:onclick="'deleteRequest(\'' + ${request.id} + '\')'">Delete request</button>
+            </td>
         </tr>
         </tbody>
-    </table>
+    </table></div>
 </div>
+
+<script>
+function deleteRequest(requestId) {
+    if (confirm('Are you sure you want to delete this request?')) {
+        let csrfToken = document.querySelector('meta[name="_csrf"]').content;
+        let csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+        fetch(`/trainer/deleteClientRequest/${requestId}`, {
+            method: 'DELETE',
+            headers: {
+                [csrfHeader]: csrfToken
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => { throw new Error(err.error || 'Failed to delete the request.'); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Server Response:', data);
+            alert(data.message);
+
+
+            let row = document.getElementById(`request-${requestId}`);
+            if (row) {
+                row.remove();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred: ' + error.message);
+        });
+    }
+}
+</script>
+
+<meta name="_csrf" th:content="${_csrf.token}"/>
+<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
 </body>
 </html>

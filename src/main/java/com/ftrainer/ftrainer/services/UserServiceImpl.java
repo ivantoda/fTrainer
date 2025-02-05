@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.text.ParseException;
+import java.util.List;
 
 
 @Getter
@@ -84,6 +85,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public List<User> findAllClients() {
+        return userRepository.findByUserRole_name("CLIENT");
     }
 }
 
