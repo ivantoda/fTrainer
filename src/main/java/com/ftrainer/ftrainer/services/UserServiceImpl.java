@@ -28,6 +28,11 @@ public class UserServiceImpl implements UserService {
     public User findById(Integer id) {
         return userRepository.findById(id).orElse(null);
     }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     @Override
     public User addUser(UserPayload userPayload) throws ParseException {
         var bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -49,7 +54,25 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         return user;
     }
-
+    public UserPayload getUserForEdit(Integer id){
+        var optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            UserPayload userPayload = new UserPayload();
+            userPayload.setId(user.getId());
+            userPayload.setUsername(user.getUsername());
+            userPayload.setFirstname(user.getFirstname());
+            userPayload.setLastname(user.getLastname());
+            userPayload.setEmail(user.getEmail());
+            userPayload.setDateOfBirth(user.getDateOfBirth());
+            userPayload.setUserRole(user.getUserRole().getName());
+            userPayload.setPassword(user.getPassword());
+            userPayload.setEnabled(true);
+            return userPayload;
+        } else {
+            throw new EntityNotFoundException("User with ID " + id + " not found");
+        }
+    }
     @Override
     public void editUserById(Integer id, UserPayload userPayload) {
         var optionalUser = userRepository.findById(id);

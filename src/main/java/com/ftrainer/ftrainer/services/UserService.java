@@ -10,10 +10,13 @@ import java.util.List;
 public interface UserService {
     User addUser(UserPayload userPayload) throws ParseException;
     User findById(Integer id);
+    User findByUsername(String username);
     void editUserById(Integer id, UserPayload userPayload);
 
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
 
     List<User> findAllClients();
+
+    UserPayload getUserForEdit(Integer id);
 }

@@ -132,7 +132,7 @@ public class TrainerController {
     public String showAllRequests(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         var trainerName = authentication.getName();
-        User trainer = userRepository.findByUsername(trainerName);
+        User trainer = userService.findByUsername(trainerName);
 
         List<ClientRequest> clientRequests = clientRequestService.getClientRequestsByTrainer(trainer);
         List<User> clients = userService.findAllClients();

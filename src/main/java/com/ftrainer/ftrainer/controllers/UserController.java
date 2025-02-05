@@ -82,20 +82,10 @@ public class UserController {
     @GetMapping("/{id}/editForm")
     public String editUserForm(@PathVariable("id") Integer id, @ModelAttribute("userPayload") UserPayload userPayload, @ModelAttribute("rolePayload") Role rolePayload, Model model) {
         try {
-            User user = userService.findById(id);
-
+            userPayload = userService.getUserForEdit(id);
             var roles = roleRepository.findAll();
             roles.remove(0);
             model.addAttribute("roleOptions", roles);
-
-            userPayload.setUsername(user.getUsername());
-            userPayload.setFirstname(user.getFirstname());
-            userPayload.setEmail(user.getEmail());
-            userPayload.setLastname(user.getLastname());
-            userPayload.setDateOfBirth(user.getDateOfBirth());
-            userPayload.setUserRole(user.getUserRole().getName());
-            userPayload.setPassword(user.getPassword());
-            userPayload.setEnabled(true);
 
             model.addAttribute("userPayload", userPayload);
 

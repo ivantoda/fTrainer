@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByUsername(String username);
 
     List<User> findByUserRole_name(String roleName);
 
@@ -17,6 +16,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findByUserRole_nameOrderByLastnameAsc(String roleName);
     List<User> findByUserRole_nameOrderByLastnameDesc(String roleName);
     Optional<User> findById(Integer id);
+
+    User findByUsername(String username);
 
     boolean existsByUsername(String username);
 
