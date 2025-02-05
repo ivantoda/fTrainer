@@ -145,8 +145,8 @@ public class TrainerController {
     @PreAuthorize("hasAnyAuthority('TRAINER')")
     @GetMapping("/writeProgram/{clientId}/{trainerId}")
     public String writeProgramForm(@PathVariable Integer clientId, @PathVariable Integer trainerId, Model model){
-        User trainer = userRepository.findById(trainerId).orElse(null);
-        User client = userRepository.findById(clientId).orElse(null);
+        User trainer = userService.findById(trainerId);
+        User client = userService.findById(clientId);
 
         Program program = programRepository.findFirstByClientAndTrainerOrderByIdDesc(client, trainer);
 
