@@ -1,8 +1,11 @@
 package com.ftrainer.ftrainer.controllers;
 
 import com.ftrainer.ftrainer.dto.ClientRequestPayload;
+import com.ftrainer.ftrainer.dto.ImagePayload;
+import com.ftrainer.ftrainer.dto.UserPayload;
 import com.ftrainer.ftrainer.entities.*;
 import com.ftrainer.ftrainer.repositories.*;
+import com.ftrainer.ftrainer.security.SecurityUtils;
 import com.ftrainer.ftrainer.services.*;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Security;
 import java.util.List;
 
 @Controller
@@ -49,7 +53,9 @@ public class ClientController {
 
     @PreAuthorize("hasAnyAuthority('CLIENT')")
     @GetMapping()
-    public String viewHomePage() {
+    public String viewHomePage(Model model) {
+        int userId = SecurityUtils.getCurrentUserId();
+        model.addAttribute("userId", userId);
         return "client/clientIndex";
     }
 

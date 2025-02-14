@@ -19,7 +19,7 @@
                 let errorMessage = "";
 
                 inputs.forEach(input => {
-                    if (input.type !== "hidden" && input.value.trim() === "") {
+                    if (input.type !== "hidden" && input.value.trim() === "" && input.id !== "profilePicture") {
                         isValid = false;
                         errorMessage = "Please fill out all fields!";
                     }
@@ -53,7 +53,7 @@
 
 <div class = "registration-div">
     <label style="font-size: 25px; margin: 20px">Registration</label>
-<form th:action="@{/user/addUser}" th:object="${userPayload}" method="post">
+<form th:action="@{/user/addUser}" th:object="${userPayload}" method="post" enctype="multipart/form-data">
     <input type="hidden" th:field="*{id}" />
     <div>
         <label for="username">Username: </label>
@@ -90,6 +90,10 @@
                 th:text="${option.name}" th:value="${option.name}">
         </option>
     </select>
+    </div>
+    <div>
+        <label for="profilePicture">Profile Picture: </label>
+        <input type="file" id ="profilePicture" name="file" accept="image/*" />
     </div>
     <button type="submit" style="margin: 10px;">Register</button>
     <div class="form-actions row justify-content-center">

@@ -1,0 +1,15 @@
+<!-- src/main/resources/templates/fragments/header-fragment.html -->
+<nav th:fragment="header-navbar" class = "nav-div">
+    <a href="/client"><img th:src="@{/images/trainer_logo.png}" class="nav-logo-image-home" alt="FTrainer Home"></a>
+    <div class="navbar-right">
+        <div id = "dropdownMenu" class="dropdown-container">
+            <div id = "dropdownContent" class="dropdown-content">
+                <span class="navbar-text">Hello, <b><span th:text="${#authentication.name}"></span></b></span>
+                <a class="dropdown-item" href="/profile">Edit Profile</a>
+                <a class="dropdown-item" href="/profile">Delete Account</a>
+                <a class="navbar-logout" th:href="@{/logout}" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
+            </div>
+        <img class="navbar-profile-picture" th:src="@{/image/{id}(id=${userId})}" alt="User Image" onclick="toggleDropdown()" />
+        </div>
+    </div>
+</nav>

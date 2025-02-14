@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         var roleUser = roleRepository.findByName(userPayload.getUserRole());
         user.setUserRole(roleUser);
         user.setEnabled(true);
-        return user;
+        return userRepository.save(user);
     }
     public UserPayload getUserForEdit(Integer id){
         var optionalUser = userRepository.findById(id);

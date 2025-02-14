@@ -7,3 +7,4 @@ CREATE TABLE grade (
     CONSTRAINT fk_trainer FOREIGN KEY (trainer_id) REFERENCES users(id),
     CONSTRAINT fk_client FOREIGN KEY (client_id) REFERENCES users(id)
 );
+

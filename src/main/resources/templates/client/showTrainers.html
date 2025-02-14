@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trainers List</title>
-    <link
-            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-            rel="stylesheet"
-            integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous">
+    <title>FTrainer Client</title>
+    <link rel="icon" href="/images/title_logo.png" type="image/png">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body style="background-color: #eeeeee">
+<body class="indexBody">
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
     <div class="container-fluid">
         <a class="navbar-brand" href="/client">FTrainer</a>
@@ -25,24 +22,19 @@
         </div>
     </div>
 </nav>
-<div class="container">
-    <h2>Trainers List</h2>
+<div class="container-table">
+    <div style="background-color: rgba(0, 0, 200, 0.2)"><h2>Trainers Lista</h2></div>
     <div>
         <a class="btn btn-primary" th:href="@{/client/showAllTrainers(sort='asc')}">Ascending</a>
         <a class="btn btn-primary" th:href="@{/client/showAllTrainers(sort='desc')}">Descending</a>
     </div>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th></th>
-        </tr>
-        </thead>
+    <table>
         <tbody>
         <tr th:each="trainer : ${trainers}">
-            <td th:text="${trainer.firstname}"></td>
-            <td th:text="${trainer.lastname}"></td>
+            <td><div class="trainer-div">
+                <label th:text="${trainer.firstname}"></label>
+                <label th:text="${trainer.lastname}"></label>
+            </div></td>
             <td>
                 <a th:href="@{/client/sendRequestForm(trainerId=${trainer.id})}" class="btn btn-danger">Send request for exercise!</a>
             </td>

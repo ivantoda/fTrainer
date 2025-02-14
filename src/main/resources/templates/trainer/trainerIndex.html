@@ -8,14 +8,9 @@
     <link rel="icon" href="/images/title_logo.png" type="image/png">
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
+<script th:src="@{/js/script.js}"></script>
 <body>
-<nav class = "nav-div">
-    <a href="/client"><img th:src="@{/images/trainer_logo.png}" class="nav-logo-image-home" alt="FTrainer Home"></a>
-    <div clas="navbar-right">
-        <span class="navbar-text">Hello, <b><span th:text="${#authentication.name}"></span></b></span>
-        <a class="navbar-logout" th:href="@{/logout}" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
-    </div>
-</nav>
+<nav th:replace="~{fragments/header-fragment :: header-navbar}"></nav>
 <div class="trainer-div-index">
 <div class="admin-index-div">
 <h2>TRAINER PAGE</h2>
