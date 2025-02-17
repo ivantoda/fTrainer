@@ -4,6 +4,7 @@ import com.ftrainer.ftrainer.dto.ExercisePayload;
 import com.ftrainer.ftrainer.entities.*;
 import com.ftrainer.ftrainer.repositories.*;
 import com.ftrainer.ftrainer.security.JwtUtil;
+import com.ftrainer.ftrainer.security.SecurityUtils;
 import com.ftrainer.ftrainer.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -63,8 +64,9 @@ public class TrainerController {
     @PreAuthorize("hasAnyAuthority('TRAINER')")
     @GetMapping()
     public String viewHomePage(Model model) {
-        User trainer = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        String token = JwtUtil.generateToken(trainer.getId());
+        int userId = SecurityUtils.getCurrentUserId();
+        String token = JwtUtil.generateToken(userId);
+        model.addAttribute("userId", userId);
         model.addAttribute("token", token);
         return "trainer/trainerIndex";
     }

@@ -10,4 +10,6 @@ public interface ImageService {
     void saveImageFile(MultipartFile file, Integer userId) throws IOException;
 
     byte[] getImageByUserId(int userId);
+
+    byte[] getDefaultImage();
 }

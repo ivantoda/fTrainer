@@ -9,6 +9,7 @@ import com.ftrainer.ftrainer.security.SecurityUtils;
 import com.ftrainer.ftrainer.services.*;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -60,16 +61,32 @@ public class ClientController {
     }
 
     @PreAuthorize("hasAnyAuthority('CLIENT')")
-    @GetMapping("/showAllTrainers")
-    public String showAllTrainers(@RequestParam(defaultValue = "asc") String sort, Model model) {
-        List<User> trainers;
-        if (sort.equals("asc")) {
-            trainers = clientService.getTrainersAsc();
+    @GetMapping("/showAllTrainers/{pageNo}")
+    public String findPaginatedTrainers(  @PathVariable(value = "pageNo") int pageNo,
+                                          @RequestParam(value = "sortOrder", defaultValue = "asc") String sortOrder,
+                                          @RequestParam(value="searchKeyword", required = false, defaultValue="") String searchKeyWord,
+                                          Model model) {
+        int userId = SecurityUtils.getCurrentUserId();
+        model.addAttribute("userId", userId);
+        int pageSize = 8;
+        Page<User> page;
+
+        if ("desc".equalsIgnoreCase(sortOrder)) {
+            page = clientService.findAllTrainersSortedByFirstnameDesc(searchKeyWord, pageNo, pageSize);
         } else {
-            trainers = clientService.getTrainersDesc();
+            page = clientService.findAllTrainersSortedByFirstnameAsc(searchKeyWord, pageNo, pageSize);
         }
+
+        List<User> trainers = page.getContent();
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("trainers", trainers);
-        return "client/showTrainers";
+        model.addAttribute("sortOrder", sortOrder);
+        model.addAttribute("searchKeyword", searchKeyWord);
+
+        return "/client/showTrainers";
     }
 
     @PreAuthorize("hasAnyAuthority('CLIENT')")

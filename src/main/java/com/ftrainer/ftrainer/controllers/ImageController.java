@@ -10,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.io.IOException;
+
 @Controller
 public class ImageController {
     private final ImageService imageService;
@@ -19,12 +21,11 @@ public class ImageController {
     }
 
     @GetMapping("/image/{userId}")
-        public ResponseEntity<byte[]> getUserImage(@PathVariable int userId) {
-            ImagePayload imagePayload = new ImagePayload();
+        public ResponseEntity<byte[]> getUserImage(@PathVariable int userId) throws IOException {
             byte[] imageData = imageService.getImageByUserId(userId);
 
             if (imageData == null) {
-                return ResponseEntity.notFound().build();
+                imageData = imageService.getDefaultImage();
             }
 
             HttpHeaders headers = new HttpHeaders();

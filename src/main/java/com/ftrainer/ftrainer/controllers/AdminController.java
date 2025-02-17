@@ -4,6 +4,7 @@ import com.ftrainer.ftrainer.dto.UserPayload;
 import com.ftrainer.ftrainer.entities.User;
 import com.ftrainer.ftrainer.repositories.RoleRepository;
 import com.ftrainer.ftrainer.repositories.UserRepository;
+import com.ftrainer.ftrainer.security.SecurityUtils;
 import com.ftrainer.ftrainer.services.AdminService;
 import com.ftrainer.ftrainer.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -43,8 +44,11 @@ public class AdminController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @GetMapping()
-    public String AdminIndex(){
-            return "admin/adminIndex";
+    public String AdminIndex(Model model)
+    {
+        int userId = SecurityUtils.getCurrentUserId();
+        model.addAttribute("userId", userId);
+        return "admin/adminIndex";
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
