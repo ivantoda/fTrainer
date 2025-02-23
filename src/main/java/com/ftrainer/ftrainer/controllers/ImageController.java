@@ -1,6 +1,7 @@
 package com.ftrainer.ftrainer.controllers;
 
 import com.ftrainer.ftrainer.dto.ImagePayload;
+import com.ftrainer.ftrainer.security.SecurityUtils;
 import com.ftrainer.ftrainer.services.ImageService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,4 +34,18 @@ public class ImageController {
 
             return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
         }
+    @GetMapping("/profilePicture")
+    public ResponseEntity<byte[]> getCurrentUserProfilePicture() throws IOException {
+        int userId = SecurityUtils.getCurrentUserId();
+        byte[] imageData = imageService.getImageByUserId(userId);
+
+        if (imageData == null) {
+            imageData = imageService.getDefaultImage();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+
+        return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
     }
+}

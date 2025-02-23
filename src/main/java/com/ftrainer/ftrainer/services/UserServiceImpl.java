@@ -29,6 +29,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public UserPayload findById2(int id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trainer not found with id: " + id));
+        return new UserPayload(user);
+    }
+
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }

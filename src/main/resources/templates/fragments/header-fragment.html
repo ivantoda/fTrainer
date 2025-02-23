@@ -9,7 +9,7 @@
                 <a class="dropdown-item" href="/profile">Delete Account</a>
                 <a class="navbar-logout" th:href="@{/logout}" onclick="return confirm('Are you sure you want to logout?');">Logout</a>
             </div>
-        <img class="navbar-profile-picture" th:src="@{/image/{id}(id=${userId})}" alt="User Image" onclick="toggleDropdown()" />
+        <img class="navbar-profile-picture" th:src="@{/profilePicture}" alt="User Image" onclick="toggleDropdown()" />
         </div>
     </div>
 </nav>

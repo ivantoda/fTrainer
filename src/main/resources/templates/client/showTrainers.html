@@ -7,8 +7,6 @@
     <title>FTrainer Client</title>
     <link rel="icon" href="/images/title_logo.png" type="image/png">
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
 </head>
 <script th:src="@{/js/script.js}"></script>
 <body class="indexBody">
@@ -44,11 +42,11 @@
                 <label class="name-trainer-label" th:text="${trainer.firstname} +' '+ ${trainer.lastname}"></label>
                 <img class="trainer-profile-picture" th:src="@{/image/{id}(id=${trainer.id})}" alt="${trainer.firstname} + ' Image'" />
                 <a th:href="@{/client/sendRequestForm(trainerId=${trainer.id})}">
-                    <button class="trainer-div-button" type="button"> Send request for exercise! </button></a>
+                    <button class="trainer-div-button" type="button"> Send request! </button></a>
             </div></div></div>
 </div>
 </div>
-<div style="font-size: 16px; margin: 15px;">
+<div style="font-size: 16px; margin: 15px; text-align:center;">
     Total Users: [[${totalItems}]] </div>
 <div>
     <div th:if = "${totalPages > 1}" class="pagination" >

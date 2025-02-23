@@ -7,6 +7,8 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Getter
 @Service
 public class SetExerciseServiceImpl implements SetExerciseService{
@@ -25,5 +27,9 @@ public class SetExerciseServiceImpl implements SetExerciseService{
     public SetExercise addSetExercise(SetExercise setExercise) {
         setExerciseRepository.save(setExercise);
         return setExercise;
+    }
+
+    public List<SetExercise> getByProgramId(Integer programId) {
+        return setExerciseRepository.findByProgramId(programId);
     }
 }

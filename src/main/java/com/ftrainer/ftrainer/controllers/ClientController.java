@@ -18,7 +18,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Security;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/client")
@@ -27,47 +30,43 @@ public class ClientController {
     private final ClientService clientService;
 
     private final UserService userService;
-    private final RoleRepository roleRepository;
 
-    private final ExerciseRepository exerciseRepository;
-    private final SetExerciseRepository setExerciseRepository;
+    private ExerciseService exerciseService;
 
-    private final ProgramRepository programRepository;
-
+    private final ProgramService programService;
     private final ClientRequestService clientRequestService;
-    private final UserRepository userRepository;
+
+    private final SetExerciseService setExerciseService;
     @Autowired
     private final WebSocketController webSocketController;
 
-    public ClientController(UserService userService, RoleRepository roleRepository, ClientService clientService, ExerciseRepository exerciseRepository, SetExerciseRepository setExerciseRepository, ProgramRepository programRepository, ClientRequestService clientRequestService,
+    public ClientController(UserService userService, ClientService clientService, ExerciseService exerciseService, SetExerciseService setExerciseService, ProgramService programService, ClientRequestService clientRequestService,
                             UserRepository userRepository, WebSocketController webSocketController) {
         this.userService = userService;
-        this.roleRepository = roleRepository;
         this.clientService = clientService;
-        this.exerciseRepository = exerciseRepository;
-        this.setExerciseRepository = setExerciseRepository;
-        this.programRepository = programRepository;
+        this.exerciseService = exerciseService;
+        this.programService = programService;
         this.clientRequestService = clientRequestService;
-        this.userRepository = userRepository;
         this.webSocketController = webSocketController;
+        this.setExerciseService = setExerciseService;
     }
 
     @PreAuthorize("hasAnyAuthority('CLIENT')")
     @GetMapping()
-    public String viewHomePage(Model model) {
-        int userId = SecurityUtils.getCurrentUserId();
-        model.addAttribute("userId", userId);
+    public String viewHomePage() {
         return "client/clientIndex";
     }
 
     @PreAuthorize("hasAnyAuthority('CLIENT')")
-    @GetMapping("/showAllTrainers/{pageNo}")
-    public String findPaginatedTrainers(  @PathVariable(value = "pageNo") int pageNo,
+    @GetMapping({"/showAllTrainers/{pageNo}", "/showAllTrainers"})
+    public String findPaginatedTrainers(  @PathVariable(required = false, value = "pageNo") Integer pageNo,
                                           @RequestParam(value = "sortOrder", defaultValue = "asc") String sortOrder,
                                           @RequestParam(value="searchKeyword", required = false, defaultValue="") String searchKeyWord,
                                           Model model) {
-        int userId = SecurityUtils.getCurrentUserId();
-        model.addAttribute("userId", userId);
+        if (pageNo == null) {
+            pageNo = 1;
+        }
+
         int pageSize = 8;
         Page<User> page;
 
@@ -103,7 +102,7 @@ public class ClientController {
 
         if (authentication != null) {
             var clientName = authentication.getName();
-            User client = userRepository.findByUsername(clientName);
+            User client = userService.findByUsername(clientName);
 
             model.addAttribute("client", client);
 
@@ -130,16 +129,11 @@ public class ClientController {
     @PreAuthorize("hasAnyAuthority('CLIENT')")
     @GetMapping("/showClientProgram")
     public String showAllPrograms(Model model){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        var clientName = authentication.getName();
-        User client = userRepository.findByUsername(clientName);
-        List<SetExercise> setExercises = setExerciseRepository.findAll();
-        List<Program> programs = programRepository.findAll();
-        List<Exercise> exercises = exerciseRepository.findAll();
+        int userId = SecurityUtils.getCurrentUserId();
+        UserPayload clientPayload = userService.findById2(userId);
+        Map<Program, UserPayload> programs = programService.findProgramsByClient(clientPayload);
         model.addAttribute("programs", programs);
-        model.addAttribute("setExercises",setExercises);
-        model.addAttribute("exercises",exercises);
-        model.addAttribute("client",client);
+        model.addAttribute("client",clientPayload);
         return "client/showPrograms";
     }
 }

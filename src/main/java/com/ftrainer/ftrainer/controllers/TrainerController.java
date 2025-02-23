@@ -168,9 +168,8 @@ public class TrainerController {
 
     @PreAuthorize("hasAnyAuthority('TRAINER')")
     @PostMapping("/addSetExercise")
-    public String addSetExercise(@RequestParam Integer selectedExerciseId, @RequestParam Integer setCount, @RequestParam Integer exerciseCount, @RequestParam Integer programId){
+    public String addSetExercise(@RequestParam Integer setCount, @RequestParam Integer exerciseCount, @RequestParam Integer programId){
         SetExercise setExercise = new SetExercise();
-        setExercise.setExerciseId(selectedExerciseId);
         setExercise.setExerciseCount(exerciseCount);
         setExercise.setSetCount(setCount);
         Program program = programRepository.findById(programId).orElse(null);
@@ -192,12 +191,12 @@ public class TrainerController {
     @PreAuthorize("hasAnyAuthority('TRAINER')")
     @PostMapping("/deleteProgram/{programId}")
     public String deleteProgram(@PathVariable Integer programId) {
-        Optional<Program> programOptional = programRepository.findById(programId);
+        Optional<Program> programOptional = programService.findById(programId);
 
         if (programOptional.isPresent()) {
             Program program = programOptional.get();
 
-            programRepository.delete(program);
+            programService.delete(program);
 
             return "redirect:/trainer/showAllPrograms";
         }
@@ -208,7 +207,7 @@ public class TrainerController {
     public ResponseEntity<Map<String, String>> deleteRequest(@PathVariable Integer requestId) {
         ClientRequest clientRequest = clientRequestService.findById(requestId);
         if (clientRequest != null) {
-            clientRequestRepository.delete(clientRequest);
+            clientRequestService.delete(clientRequest);
 
             Map<String, String> response = new HashMap<>();
             response.put("message", "Request deleted successfully!");

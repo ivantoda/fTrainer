@@ -67,10 +67,10 @@ h1 {
 }
 
 .trainer-div-grid{
+    margin-left:5%;
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    padding-left:5%;
 }
 
 .trainer-div{
@@ -104,7 +104,7 @@ h1 {
 }
 
 .trainer-div-button:hover{
-    border: 3px outset red;
+    border: 3px solid rgba(255,0,0,0.8);
 }
 
 .name-trainer-label{
@@ -270,6 +270,34 @@ button {
     background-color: white;
 }
 
+.request-form{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    background-color: rgba(200,200,200,0.3);
+    padding:10%;
+    width:100%;
+    border-radius: 5%;
+}
+
+.request-textarea{
+    padding:10px;
+    font-family: "Helvetica", monospace;
+    font-size:16px;
+    border-radius:15px;
+    border: transparent;
+}
+
+.request-button{
+    font-family: "Helvetica", monospace;
+    font-size:20px;
+    background-color: black;
+    padding: 10px;
+    color: white;
+    text-align:center;
+    width: 100%;
+}
+
 .trainer-profile-picture{
     width: 90%;
     height: 12rem;
@@ -304,6 +332,9 @@ button {
     border: 3px solid
 }
 .search-div-trainer{
+    margin-left: 5%;
+    background-color:rgba(200,200,200,0.3);
+    border-radius:5%;
     padding:10px;
     display: flex;
     flex-direction: column;
@@ -361,6 +392,44 @@ button {
     display: flex;
     justify-content: space-between;;
     padding:10px;
+}
+
+.program-div{
+    display: flex;
+    justify-content: space-between;
+    padding:10px;
+    background-color: rgba(200,200,200,0.4);
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+    border-radius:20px;
+    margin:10px;
+    box-sizing: border-box;
+    }
+
+.program-div:hover{
+    box-shadow: 8px 8px 3px rgba(0, 0, 0, 0.6);
+}
+
+.search-div-program{
+    margin-left: 5%;
+    background-color:rgba(200,200,200,0.3);
+    border-radius:5%;
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.program-container{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.program-grid{
+    margin-left:10%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-right:10%;
 }
 
 .pagination-button {
@@ -450,10 +519,17 @@ a:hover {
 @media (max-width: 768px) {
   .index-header, .index-center-div {
     width: 90%;
-  }
+  }}
 
 .container {
-flex-direction: column;
+display-flex;
+flex-direction: space-between;
+}
+
+.request-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .index-left-div {

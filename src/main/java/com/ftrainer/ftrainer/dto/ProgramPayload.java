@@ -15,4 +15,6 @@ public class ProgramPayload {
     private Integer clientId;
 
     private List<Integer> setExerciseId;
+
+    private boolean isDone;
 }

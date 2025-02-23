@@ -10,6 +10,8 @@ import java.util.List;
 public interface UserService {
     User addUser(UserPayload userPayload) throws ParseException;
     User findById(Integer id);
+
+    UserPayload findById2(int id);
     User findByUsername(String username);
     void editUserById(Integer id, UserPayload userPayload);
 

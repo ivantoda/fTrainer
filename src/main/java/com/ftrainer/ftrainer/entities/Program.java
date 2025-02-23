@@ -34,6 +34,9 @@ public class Program {
     @ToString.Exclude
     private List<SetExercise> setExercises = new ArrayList<>();
 
+    @Column(name="is_done", nullable = false)
+    private Boolean isDone = false;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -46,4 +46,9 @@ public class ClientRequestServiceImpl implements ClientRequestService{
         return clientRequestRepository.findByTrainer(trainer);
     }
 
+    @Override
+    public void delete(ClientRequest clientRequest) {
+        clientRequestRepository.delete(clientRequest);
+    }
+
 }

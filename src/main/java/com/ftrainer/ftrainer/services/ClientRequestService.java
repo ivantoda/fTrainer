@@ -17,4 +17,6 @@ public interface ClientRequestService {
     ClientRequest findById(Integer id);
 
     List<ClientRequest> getClientRequestsByTrainer(User trainer);
+
+    void delete(ClientRequest clientRequest);
 }

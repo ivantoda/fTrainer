@@ -1,0 +1,18 @@
+<!-- src/main/resources/templates/fragments/pageable-fragment.html -->
+<div th:fragment="pageable-footer">
+    <div style="font-size: 16px; margin: 15px;">
+        Total Users: [[${totalItems}]] </div>
+    <div th:if = "${totalPages > 1}" class="pagination" >
+        <a th:if="${currentPage > 1}" th:href="@{'/admin/showAllTrainers/1' + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin-left: 10px;">First</a>
+        <span th:unless="${currentPage > 1}" style="margin-left: 10px; font-weight: bold;">First</span>
+        <a th:if="${currentPage > 1}" th:href="@{'/admin/showAllTrainers/' + ${currentPage - 1} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin-left: 10px;">Previous</a>
+        <span th:unless="${currentPage > 1}" style="margin-left: 10px; font-weight: bold;">Previous</span>
+        <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:if="${currentPage != i}" th:href="@{'/admin/showAllTrainers/' + ${i} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}"  style="margin: 0 5px; text-decoration: none;">[[${i}]]</a>
+                <span th:unless="${currentPage != i}" style="margin: 0 5px; font-weight: bold;">[[${i}]]</span>
+            </span>
+        <a th:if="${currentPage < totalPages}" th:href="@{'/admin/showAllTrainers/' + ${currentPage + 1} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}" style="margin-left: 10px;">Next</a>
+        <span th:unless="${currentPage < totalPages}" style="margin-left: 10px; font-weight: bold;">Next</span>
+        <a th:if="${currentPage < totalPages}" th:href="@{'/admin/showAllTrainers/' + ${totalPages} + '?sortOrder=' + ${sortOrder} + '&searchKeyword=' + ${searchKeyword}}" style="margin-left: 10px;">Last</a>
+        <span th:unless="${currentPage < totalPages}" style="margin-left: 10px; font-weight: bold;">Last</span>
+    </div></div>
