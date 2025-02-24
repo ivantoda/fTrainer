@@ -12,13 +12,24 @@
 <body class="indexBody">
 <nav th:replace="~{fragments/header-fragment :: header-navbar}"></nav>
 <div class="program-container">
-    <h2>Your programs</h2>
+    <h1 style="text-align:center;">Your programs</h1>
     <div style="display: flex; ">
-    <div class="search-div-program">SEARCH</div>
+    <div class="search-div-program">
+        <div>
+            <form method="get" th:action="@{'/client/showClientProgram/1'}">
+                <div><input type="text" style="width:90%; margin-top:10px; margin-bottom:10px;" name="searchKeyword" th:value="${searchKeyword}" placeholder="Search by trainer..." /></div>
+                <button type="submit" style="font-size: 18px;">Search</button>
+                <a th:href="@{/client/showClientProgram}">
+                    <button type="button" style="background-color: rgba(200,0,0,0.6); font-size: 18px; color: black"> Reset </button>
+                </a>
+            </form>
+        </div>
+    </div>
     <div class="program-grid">
     <div class ="program-div" th:each="program : ${programs}">
-            <label th:text="'Program by trainer: ' + ${program.value.firstname} + ' ' + ${program.value.lastname}"></label>
-            <a th:href="@{/client/showProgram}">
+        <b><label style="margin: 10px;" th:text="'Program by trainer: ' + ${program.value.firstname} + ' ' + ${program.value.lastname} "></label></b>
+        <img class="program-trainer-profile-picture" th:src="@{/image/{id}(id=${program.value.id})}" alt="${trainer.firstname} + ' Image'" />
+        <a th:href="@{/client/showProgramDetails(programId=${program.key.id}, trainerId=${program.value.id})}">
                 <button class="trainer-div-button" type="button"> Details </button></a>
     </div></div></div>
 </div>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTrainer Client</title>
+    <link rel="icon" href="/images/title_logo.png" type="image/png">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<script th:src="@{/js/script.js}"></script>
+<body class="indexBody">
+<nav th:replace="~{fragments/header-fragment :: header-navbar}"></nav>
+<div><b><label style="margin: 10px;" th:text="'Program by trainer: ' + ${program.id} + ' ' + ${trainer.lastname} "></label></b>
+<img class="program-trainer-profile-picture" th:src="@{/image/{id}(id=${trainer.id})}" alt="${trainer.firstname} + ' Image'" /></div>
+<div class="program-details-grid">
+<div class ="program-details-div" th:each="setExercise : ${setExercises}">
+    <div style="display:flex; flex-direction:column; ">
+    <label th:text="'Exercise name: ' + ${setExercise.value.name}"></label>
+    <label th:text="'Sets: ' + ${setExercise.key.setCount}"></label>
+    <label th:text="'Reps: ' + ${setExercise.key.exerciseCount}"></label>
+    <button class ="trainer-div-button" onclick="toggleDiv('hiddenDiv1')">Show Exercise Description</button>
+    </div>
+    <div id="hiddenDiv1" style="display: none;">
+        <label th:text="'Exercise Description: ' + ${setExercise.value.description}"></label>
+    </div>
+</div></div>
+</body>
+</html>

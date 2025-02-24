@@ -29,7 +29,6 @@ public class SetExercise {
 
     @Column(name = "exercise_id", nullable = false)
     @NotNull(message = "exercise_id shouldn't be null")
-
     private Integer exerciseId;
 
     @ManyToOne(fetch = FetchType.LAZY)

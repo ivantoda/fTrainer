@@ -394,6 +394,16 @@ button {
     padding:10px;
 }
 
+.program-details-div{
+    display: flex;
+    justify-content: space-between;
+    gap:20px;
+    flex-direction: column;
+    padding:10px;
+    margin:10px;
+    width:18rem;
+    }
+
 .program-div{
     display: flex;
     justify-content: space-between;
@@ -403,14 +413,33 @@ button {
     border-radius:20px;
     margin:10px;
     box-sizing: border-box;
+    width:28rem;
     }
+@media (max-width: 600px) {
+        .program-div{
+          width: 15rem;
+        }}
 
 .program-div:hover{
     box-shadow: 8px 8px 3px rgba(0, 0, 0, 0.6);
 }
 
+.program-trainer-profile-picture{
+        margin-top: 10px;
+        border-radius: 20px;
+        color: black;
+        width: 3rem;
+        height:3rem;
+        object-fit: cover;
+        object-position: center;
+        border-radius:2rem;
+        border: 3px solid
+}
+
 .search-div-program{
-    margin-left: 5%;
+    height:100%;
+    width:16rem;
+    margin-left: 15px;
     background-color:rgba(200,200,200,0.3);
     border-radius:5%;
     padding:10px;
@@ -425,6 +454,14 @@ button {
 }
 
 .program-grid{
+    margin-left:10%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-right:10%;
+}
+
+.program-details-grid{
     margin-left:10%;
     display: flex;
     flex-wrap: wrap;

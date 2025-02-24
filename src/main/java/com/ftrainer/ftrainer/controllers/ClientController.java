@@ -2,6 +2,7 @@ package com.ftrainer.ftrainer.controllers;
 
 import com.ftrainer.ftrainer.dto.ClientRequestPayload;
 import com.ftrainer.ftrainer.dto.ImagePayload;
+import com.ftrainer.ftrainer.dto.ProgramPayload;
 import com.ftrainer.ftrainer.dto.UserPayload;
 import com.ftrainer.ftrainer.entities.*;
 import com.ftrainer.ftrainer.repositories.*;
@@ -127,13 +128,40 @@ public class ClientController {
         }
     }
     @PreAuthorize("hasAnyAuthority('CLIENT')")
-    @GetMapping("/showClientProgram")
-    public String showAllPrograms(Model model){
+    @GetMapping({"/showClientProgram/{pageNo}", "/showClientProgram" })
+    public String showAllPrograms(@PathVariable(required = false, value = "pageNo") Integer pageNo,
+                                  @RequestParam(value="searchKeyword", required = false, defaultValue = "") String searchKeyWord,
+                                  Model model){
         int userId = SecurityUtils.getCurrentUserId();
+        if(pageNo == null){
+            pageNo = 1;
+        }
+        int pageSize = 6;
         UserPayload clientPayload = userService.findById2(userId);
-        Map<Program, UserPayload> programs = programService.findProgramsByClient(clientPayload);
+
+        Map<Program, UserPayload> programs = programService.findProgramsByClient(clientPayload, searchKeyWord, pageNo, pageSize);
+
         model.addAttribute("programs", programs);
         model.addAttribute("client",clientPayload);
         return "client/showPrograms";
+    }
+
+    @PreAuthorize("hasAnyAuthority('CLIENT')")
+    @GetMapping("/showProgramDetails")
+    public String showProgramDetails(@RequestParam(value="programId") Integer programId,
+                                     @RequestParam(value="trainerId") Integer trainerId,
+                                     Model model){
+        Optional<Program> program = programService.findById(programId);
+        UserPayload trainer = userService.findById2(trainerId);
+        if(program.isPresent()){
+            Map<SetExercise, Exercise> setExercises = setExerciseService.getByProgramId(program.get().getId());
+            model.addAttribute("program", program.get());
+            model.addAttribute("trainer", trainer);
+            model.addAttribute("setExercises", setExercises);
+            return "client/showProgramDetails";
+        }else
+        {
+            return "redirect:/error";
+        }
     }
 }

@@ -7,6 +7,9 @@ import com.ftrainer.ftrainer.repositories.RoleRepository;
 import com.ftrainer.ftrainer.repositories.UserRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -50,13 +53,19 @@ public class ProgramServiceImpl implements ProgramService{
 
 
     @Override
-    public Map<Program, UserPayload> findProgramsByClient(UserPayload client) {
+    public Map<Program, UserPayload> findProgramsByClient(UserPayload client, String searchKeyWord, Integer pageNo, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").ascending());
         List<Program> programs = programRepository.findByClientId(client.getId());
         Map<Program, UserPayload> programTrainerMap = new HashMap<>();
+
         for (Program program: programs) {
             int trainerId = program.getTrainer().getId();
             UserPayload trainer = userService.findById2(trainerId);
-            programTrainerMap.put(program,trainer);
+            if(searchKeyWord == null || searchKeyWord.isBlank() ||
+                    trainer.getFirstname().toLowerCase().contains(searchKeyWord) ||
+                    trainer.getLastname().toLowerCase().contains(searchKeyWord)){
+                programTrainerMap.put(program,trainer);
+            }
         }
         return programTrainerMap;
     }
