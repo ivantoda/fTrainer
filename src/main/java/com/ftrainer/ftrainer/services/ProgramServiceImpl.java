@@ -2,6 +2,7 @@ package com.ftrainer.ftrainer.services;
 
 import com.ftrainer.ftrainer.dto.UserPayload;
 import com.ftrainer.ftrainer.entities.Program;
+import com.ftrainer.ftrainer.entities.User;
 import com.ftrainer.ftrainer.repositories.ProgramRepository;
 import com.ftrainer.ftrainer.repositories.RoleRepository;
 import com.ftrainer.ftrainer.repositories.UserRepository;
@@ -38,9 +39,19 @@ public class ProgramServiceImpl implements ProgramService{
 
     @Override
     public Program addProgram(Program program) {
+        if(program != null) programRepository.save(program);
+        return program;
+    }
+
+    @Override
+    public Program addProgram(User trainer, User client) {
+        Program program = new Program();
+        program.setTrainer(trainer);
+        program.setClient(client);
         programRepository.save(program);
         return program;
     }
+
     @Override
     public Optional<Program> findById(Integer programId) {
         return programRepository.findById(programId);

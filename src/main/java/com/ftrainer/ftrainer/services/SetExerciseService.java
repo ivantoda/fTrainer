@@ -8,6 +8,6 @@ import java.util.Map;
 
 
 public interface SetExerciseService {
-    SetExercise addSetExercise(SetExercise setExercise);
+    SetExercise addSetExercise(Integer exerciseCount, Integer setCount, Integer exerciseId,Integer programId);
     Map<SetExercise, Exercise> getByProgramId(Integer programId);
 }

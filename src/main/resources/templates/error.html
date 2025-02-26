@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,13 +8,17 @@
     <link rel="icon" href="/images/title_logo.png" type="image/png">
     <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
-<body>
+<body class = "indexBody">
 <div class="login-div">
-    <div class="alert alert-danger">
-        <h4 class="alert-heading">An error occurred</h4>
+    <div>
+        <h4>An error occurred</h4>
         <p th:text="${error}"></p>
     </div>
-    <a href="/" class="btn btn-primary">Back to Home</a>
+    <a sec:authorize="hasAnyAuthority('CLIENT', 'TRAINER', 'ADMIN')"
+       th:href="@{${#strings.contains(#authentication.principal.authorities, 'CLIENT') ? '/client'
+       : (#strings.contains(#authentication.principal.authorities, 'TRAINER') ? '/trainer'
+       : (#strings.contains(#authentication.principal.authorities, 'ADMIN') ? '/admin' : '/'))}}" >
+        Back To Home </a>
 </div>
 </body>
 </html>

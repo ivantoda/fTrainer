@@ -91,6 +91,12 @@ h1 {
     box-shadow: 8px 8px 3px rgba(0, 0, 0, 0.6);
 }
 
+.add-program-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .trainer-div-button{
     font-family: 'Helvetica', monospace;
     font-size: 16px;
@@ -101,6 +107,35 @@ h1 {
     margin-bottom:10px;
     border: 3px solid transparent;
     box-sizing: border-box;
+}
+
+.red-button{
+    font-family: 'Helvetica', monospace;
+    font-size: 16px;
+    color: black;
+    background-color: rgba(200,0,0, 0.6);
+    padding: 10px;
+    margin-top:20px;
+    margin-bottom:10px;
+    border: 3px solid transparent;
+    box-sizing: border-box;
+    border-radius:2rem;
+    width: 15rem;
+}
+
+.black-button{
+    font-family: 'Helvetica', monospace;
+    font-size: 16px;
+    color: white;
+    background-color: rgba(0,0,0, 1);
+    padding: 10px;
+    margin-top:20px;
+    margin-bottom:10px;
+    border: 3px solid transparent;
+    box-sizing: border-box;
+    border-radius:2rem;
+    width: 15rem;
+    text-align:center;
 }
 
 .trainer-div-button:hover{
@@ -492,6 +527,16 @@ input[type="text"] {
     background-color: rgba(255,255,255,0.8);
     border:none;
 }
+input[type="number"] {
+    font-size:18px;
+    border-radius: 20px;
+    font-family: "Helvetica", monospace;
+    width: 50%;
+    padding : 10px;
+    background-color: rgba(255,255,255,0.8);
+    border:none;
+}
+
 label{
     font-family: "Helvetica", monospace;
 }
@@ -531,6 +576,16 @@ select {
     padding : 10px;
     background-color: rgba(255,255,255,0.8);
     border:none;
+}
+
+.program-input-number{
+    width: 15rem;
+    background-color: rgba(200,200,200, 0.3);
+    font-size: 18px;
+    border-radius: 20px;
+    font-family: "Helvetica", monospace;
+    padding : 10px;
+    border: none;
 }
 
 a.button-link {

@@ -19,6 +19,6 @@ public class AppController {
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
-        return "redirect:/"; // Redirect to the login page with a logout parameter
+        return "redirect:/";
     }
 }

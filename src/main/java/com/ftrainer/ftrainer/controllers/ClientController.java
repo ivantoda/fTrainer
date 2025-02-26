@@ -42,7 +42,7 @@ public class ClientController {
     private final WebSocketController webSocketController;
 
     public ClientController(UserService userService, ClientService clientService, ExerciseService exerciseService, SetExerciseService setExerciseService, ProgramService programService, ClientRequestService clientRequestService,
-                            UserRepository userRepository, WebSocketController webSocketController) {
+                            WebSocketController webSocketController) {
         this.userService = userService;
         this.clientService = clientService;
         this.exerciseService = exerciseService;

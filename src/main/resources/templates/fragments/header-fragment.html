@@ -1,6 +1,10 @@
 <!-- src/main/resources/templates/fragments/header-fragment.html -->
-<nav th:fragment="header-navbar" class = "nav-div">
-    <a href="/client"><img th:src="@{/images/trainer_logo.png}" class="nav-logo-image-home" alt="FTrainer Home"></a>
+<nav th:fragment="header-navbar" class="nav-div" xmlns:th="http://www.w3.org/1999/xhtml">
+    <a sec:authorize="hasAnyAuthority('CLIENT', 'TRAINER', 'ADMIN')"
+       th:href="@{${#strings.contains(#authentication.principal.authorities, 'CLIENT') ? '/client'
+       : (#strings.contains(#authentication.principal.authorities, 'TRAINER') ? '/trainer'
+       : (#strings.contains(#authentication.principal.authorities, 'ADMIN') ? '/admin' : '/'))}}" >
+    <img th:src="@{/images/trainer_logo.png}" class="nav-logo-image-home" alt="FTrainer Home"></a>
     <div class="navbar-right">
         <div id = "dropdownMenu" class="dropdown-container">
             <div id = "dropdownContent" class="dropdown-content">

@@ -31,14 +31,9 @@ public class AdminController {
     private final AdminService adminService;
     private final UserService userService;
 
-    private final UserRepository userRepository;
 
-    private final RoleRepository roleRepository;
-
-    public AdminController(AdminService adminService, UserRepository userRepository, RoleRepository roleRepository, UserService userService) {
+    public AdminController(AdminService adminService, UserService userService) {
         this.adminService = adminService;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.userService = userService;
     }
 
@@ -125,7 +120,7 @@ public class AdminController {
     public String deleteUser(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
         try {
             User user = adminService.getUserById(id);
-            String roleName = user.getUserRole().getName(); // Get the role name
+            String roleName = user.getUserRole().getName();
 
             adminService.deleteUserById(id);
 

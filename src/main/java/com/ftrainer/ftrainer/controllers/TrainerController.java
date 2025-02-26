@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/trainer")
@@ -30,7 +29,6 @@ public class TrainerController {
     private final ExerciseService exerciseService;
 
     private final ClientRequestService clientRequestService;
-    private final UserRepository userRepository;
 
     private final ProgramService programService;
 
@@ -40,25 +38,20 @@ public class TrainerController {
     private final ProgramRepository programRepository;
     private final SetExerciseRepository setExerciseRepository;
     private final ExerciseRepository exerciseRepository;
-    private final ClientRequestRepository clientRequestRepository;
 
     @Autowired
-    public TrainerController(ExerciseService exerciseService, ClientRequestService clientRequestService,
-                             UserRepository userRepository, ProgramService programService,
+    public TrainerController(ExerciseService exerciseService, ClientRequestService clientRequestService, ProgramService programService,
                              UserService userService, SetExerciseService setExerciseService, ProgramRepository programRepository,
                              SetExerciseRepository setExerciseRepository,
-                             ExerciseRepository exerciseRepository,
-                             ClientRequestRepository clientRequestRepository) {
+                             ExerciseRepository exerciseRepository) {
         this.exerciseService = exerciseService;
         this.clientRequestService = clientRequestService;
-        this.userRepository = userRepository;
         this.programService = programService;
         this.userService = userService;
         this.setExerciseService = setExerciseService;
         this.programRepository = programRepository;
         this.setExerciseRepository = setExerciseRepository;
         this.exerciseRepository = exerciseRepository;
-        this.clientRequestRepository = clientRequestRepository;
     }
 
     @PreAuthorize("hasAnyAuthority('TRAINER')")
@@ -153,12 +146,8 @@ public class TrainerController {
         Program program = programRepository.findFirstByClientAndTrainerOrderByIdDesc(client, trainer);
 
         if (program == null) {
-            program = new Program();
-            program.setTrainer(trainer);
-            program.setClient(client);
-            programService.addProgram(program);
+            program = programService.addProgram(trainer, client);
         }
-
         List<Exercise> exercises = exerciseService.findAllExercisesOrderedByIdAsc();
         model.addAttribute("exercises", exercises);
         model.addAttribute("program", program);
@@ -168,14 +157,15 @@ public class TrainerController {
 
     @PreAuthorize("hasAnyAuthority('TRAINER')")
     @PostMapping("/addSetExercise")
-    public String addSetExercise(@RequestParam Integer setCount, @RequestParam Integer exerciseCount, @RequestParam Integer programId){
-        SetExercise setExercise = new SetExercise();
-        setExercise.setExerciseCount(exerciseCount);
-        setExercise.setSetCount(setCount);
-        Program program = programRepository.findById(programId).orElse(null);
-        setExercise.setProgram(program);
-        setExerciseService.addSetExercise(setExercise);
-        return "redirect:/trainer/writeProgram/" + program.getClient().getId() + "/" + program.getTrainer().getId();
+    public String addSetExercise(@RequestParam("exerciseCount[]") List<Integer> exerciseCounts, @RequestParam("setCount[]") List<Integer> setCounts,
+                                 @RequestParam("selectedExerciseId[]") List<Integer> exerciseId, @RequestParam Integer programId){
+        int i = 0;
+        for (Integer exerciseCount: exerciseCounts)
+        {
+            setExerciseService.addSetExercise(exerciseCount, setCounts.get(i), exerciseId.get(i), programId);
+            i++;
+        }
+        return "redirect:/trainer";
     }
     @PreAuthorize("hasAnyAuthority('TRAINER')")
     @GetMapping("/showAllPrograms")
