@@ -33,6 +33,10 @@ public class ClientRequest {
     @NotNull(message = "description shouldn't be null")
     private String description;
 
+    @Column(name="is_active", nullable = false)
+    @NotNull(message="isActive has to true or false, not null")
+    private boolean isActive;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,5 +1,7 @@
 <!-- src/main/resources/templates/fragments/header-fragment.html -->
-<nav th:fragment="header-navbar" class="nav-div" xmlns:th="http://www.w3.org/1999/xhtml">
+<nav th:fragment="header-navbar" class="nav-div"
+     xmlns:th="http://www.w3.org/1999/xhtml"
+     xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
     <a sec:authorize="hasAnyAuthority('CLIENT', 'TRAINER', 'ADMIN')"
        th:href="@{${#strings.contains(#authentication.principal.authorities, 'CLIENT') ? '/client'
        : (#strings.contains(#authentication.principal.authorities, 'TRAINER') ? '/trainer'

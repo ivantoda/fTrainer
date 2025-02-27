@@ -15,4 +15,6 @@ public class ClientRequestPayload {
     private Integer trainer;
 
     private String description;
+
+    private boolean isActive;
 }

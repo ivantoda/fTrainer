@@ -292,6 +292,25 @@ button {
     align-items:center;
 }
 
+.alert-success {
+    font-family: "Helvetica", monospace;
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(200,200,200);
+    border-color: rgba(0,0,0,0.8);
+    padding: 1rem;
+    font-weight: bold;
+    font-size:18px;
+    z-index: 1000;
+    text-align: center;
+    margin: 0;
+    width: 50%;
+    box-shadow: 0 4px 2px -2px gray;
+    border-radius: 20px;
+    align-items:center;
+}
+
 .dropdown-item{
     font-family: "Helvetica", monospace;
     font-size:20px;

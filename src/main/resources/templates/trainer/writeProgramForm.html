@@ -19,9 +19,10 @@
             <option th:each="exercise : ${exercises}" th:value="${exercise.id}" th:text="${exercise.name}"></option>
         </select>
         <input type="hidden" name="programId" th:value="${program.id}">
+        <input type="hidden" name="requestId" th:value="${requestId}">
         </div>
         <button type="button" onclick="generateDiv()" class="black-button">Add Exercise</button>
-        <button type="submit" class="red-button">Save Program</button>
+        <button type="submit" onclick="validateForm(event)" class="red-button">Save Program</button>
     </form>
 </div>
 </body>

@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Security;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public class ClientController {
 
     private final UserService userService;
 
-    private ExerciseService exerciseService;
+    private final ExerciseService exerciseService;
 
     private final ProgramService programService;
     private final ClientRequestService clientRequestService;
@@ -98,29 +99,21 @@ public class ClientController {
     }
 
     @PostMapping("/sendRequest/{trainer_id}")
-    public String sendRequest(@PathVariable("trainer_id") Integer trainerId, @ModelAttribute ClientRequestPayload requestPayload, Model model) throws NotFoundException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null) {
-            var clientName = authentication.getName();
-            User client = userService.findByUsername(clientName);
-
-            model.addAttribute("client", client);
+    public String sendRequest(@PathVariable("trainer_id") Integer trainerId,
+                              @ModelAttribute ClientRequestPayload requestPayload,
+                              RedirectAttributes redirectAttributes)
+    {
+        int userId = SecurityUtils.getCurrentUserId();
+        User client = userService.findById(userId);
+        if (client != null) {
 
             User trainer = userService.findById(trainerId);
-            User clientUser = userService.findById(client.getId());
+            clientRequestService.createRequest(trainer, client, requestPayload);
 
-            ClientRequest clientRequest = new ClientRequest();
-
-            clientRequest.setId(requestPayload.getId());
-            clientRequest.setTrainer(trainer);
-            clientRequest.setClient(clientUser);
-            clientRequest.setDescription(requestPayload.getDescription());
-
-            clientRequestService.createRequest(clientRequest);
-
-            String notificationMessage = "New request from client: " + clientUser.getUsername();
+            String notificationMessage = "New request from client: " + client.getUsername();
             webSocketController.sendNotification(notificationMessage);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Request sent!");
 
             return "redirect:/client";
         } else {

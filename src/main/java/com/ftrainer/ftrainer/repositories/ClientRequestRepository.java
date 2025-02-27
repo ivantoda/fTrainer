@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ClientRequestRepository extends JpaRepository<ClientRequest, Integer> {
-    List<ClientRequest> findByTrainer(User trainer);
+    List<ClientRequest> findByTrainerAndIsActiveTrue(User trainer);
 }

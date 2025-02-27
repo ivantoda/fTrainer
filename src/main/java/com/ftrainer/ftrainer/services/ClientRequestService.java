@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ClientRequestService {
 
-    ClientRequest createRequest(ClientRequest clientRequest);
+    ClientRequest createRequest(User trainer, User client, ClientRequestPayload clientRequestPayload);
 
     List<ClientRequest> findAll();
 
@@ -19,4 +19,6 @@ public interface ClientRequestService {
     List<ClientRequest> getClientRequestsByTrainer(User trainer);
 
     void delete(ClientRequest clientRequest);
+
+    void setAsInactive(Integer requestId);
 }

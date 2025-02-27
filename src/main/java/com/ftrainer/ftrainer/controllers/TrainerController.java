@@ -1,5 +1,6 @@
 package com.ftrainer.ftrainer.controllers;
 
+import com.electronwill.nightconfig.core.conversion.Path;
 import com.ftrainer.ftrainer.dto.ExercisePayload;
 import com.ftrainer.ftrainer.entities.*;
 import com.ftrainer.ftrainer.repositories.*;
@@ -138,8 +139,9 @@ public class TrainerController {
     }
 
     @PreAuthorize("hasAnyAuthority('TRAINER')")
-    @GetMapping("/writeProgram/{clientId}/{trainerId}")
-    public String writeProgramForm(@PathVariable Integer clientId, @PathVariable Integer trainerId, Model model){
+    @GetMapping("/writeProgram/{clientId}/{trainerId}/{requestId}")
+    public String writeProgramForm(@PathVariable Integer clientId, @PathVariable Integer trainerId, @PathVariable Integer requestId, Model model){
+
         User trainer = userService.findById(trainerId);
         User client = userService.findById(clientId);
 
@@ -151,6 +153,7 @@ public class TrainerController {
         List<Exercise> exercises = exerciseService.findAllExercisesOrderedByIdAsc();
         model.addAttribute("exercises", exercises);
         model.addAttribute("program", program);
+        model.addAttribute("requestId", requestId);
 
         return "trainer/writeProgramForm";
     }
@@ -158,13 +161,21 @@ public class TrainerController {
     @PreAuthorize("hasAnyAuthority('TRAINER')")
     @PostMapping("/addSetExercise")
     public String addSetExercise(@RequestParam("exerciseCount[]") List<Integer> exerciseCounts, @RequestParam("setCount[]") List<Integer> setCounts,
-                                 @RequestParam("selectedExerciseId[]") List<Integer> exerciseId, @RequestParam Integer programId){
-        int i = 0;
-        for (Integer exerciseCount: exerciseCounts)
-        {
-            setExerciseService.addSetExercise(exerciseCount, setCounts.get(i), exerciseId.get(i), programId);
-            i++;
+                                 @RequestParam("selectedExerciseId[]") List<Integer> exerciseId, @RequestParam Integer programId,
+                                 @RequestParam Integer requestId, RedirectAttributes redirectAttributes){
+
+        if(programService.findById(programId).isEmpty()){
+            return "redirect:/error";
         }
+        if(exerciseCounts.size() != setCounts.size())
+        {
+            return "redirect:/error";
+        }
+
+        setExerciseService.addSetExercise(exerciseCounts, exerciseCounts, exerciseId, programId, requestId);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Program added successfully!");
+
         return "redirect:/trainer";
     }
     @PreAuthorize("hasAnyAuthority('TRAINER')")

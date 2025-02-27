@@ -11,6 +11,7 @@ function toggleDropdown() {
         }
     }
 function toggleDiv(divId) {
+    console.log(divId);
         var div = document.getElementById(divId);
         if (div.style.display === "none") {
             div.style.display = "block";
@@ -18,6 +19,8 @@ function toggleDiv(divId) {
             div.style.display = "none";
         }
     }
+
+
 let countOfExercises = 0;
 
 function generateDiv() {
@@ -41,12 +44,14 @@ function generateDiv() {
     inputExerciseCount.placeholder = "Exercise count";
     inputExerciseCount.name = "exerciseCount[]";
     inputExerciseCount.style.cssText = "width: 15rem; background-color: rgba(200,200,200, 0.3);";
+    inputExerciseCount.required = true;
 
     var inputSets = document.createElement("input");
     inputSets.type = "number";
     inputSets.placeholder = "Sets";
     inputSets.name = "setCount[]";
     inputSets.style.cssText = "width: 15rem; background-color: rgba(200,200,200, 0.3);";
+    inputSets.required = true;
 
     var removeButton = document.createElement("button");
     removeButton.innerText = "Remove";
@@ -63,4 +68,27 @@ function generateDiv() {
 
     container.appendChild(newDiv);
     countOfExercises++;
+}
+
+function validateForm(event){
+    let exerciseCount = document.querySelectorAll("input[name='exerciseCount[]']");
+    let setCount = document.querySelectorAll("input[name='setCount[]']");
+
+    let validInput = 0;
+
+    exerciseCount.forEach(input => {
+        if(input.value.trim() !== "" && parseInt(input.value) > 0){
+            validInput++;
+        }
+    });
+
+    setCount.forEach(input => {
+            if(input.value.trim() !== "" && parseInt(input.value) > 0){
+                validInput++;
+            }
+    });
+    if(validInput === 0){
+    alert("Check exercise and set count!");
+    event.preventDefault();
+    }
 }

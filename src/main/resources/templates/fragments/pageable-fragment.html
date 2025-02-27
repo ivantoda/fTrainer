@@ -1,5 +1,6 @@
 <!-- src/main/resources/templates/fragments/pageable-fragment.html -->
-<div th:fragment="pageable-footer">
+<div th:fragment="pageable-footer"
+     xmlns:th="http://www.w3.org/1999/xhtml">
     <div style="font-size: 16px; margin: 15px;">
         Total Users: [[${totalItems}]] </div>
     <div th:if = "${totalPages > 1}" class="pagination" >

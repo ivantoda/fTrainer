@@ -1,5 +1,6 @@
 package com.ftrainer.ftrainer.services;
 
+import com.ftrainer.ftrainer.entities.ClientRequest;
 import com.ftrainer.ftrainer.entities.Exercise;
 import com.ftrainer.ftrainer.entities.Program;
 import com.ftrainer.ftrainer.entities.SetExercise;
@@ -25,24 +26,35 @@ public class SetExerciseServiceImpl implements SetExerciseService{
 
     private final ProgramService programService;
 
+    private final ClientRequestService clientRequestService;
+
     @Autowired
-    public SetExerciseServiceImpl(UserRepository userRepository, SetExerciseRepository setExerciseRepository, ExerciseService exerciseService, ProgramService programService) {
+    public SetExerciseServiceImpl(UserRepository userRepository, SetExerciseRepository setExerciseRepository, ExerciseService exerciseService, ProgramService programService, ClientRequestService clientRequestService) {
         this.userRepository = userRepository;
         this.setExerciseRepository = setExerciseRepository;
         this.exerciseService = exerciseService;
         this.programService = programService;
+        this.clientRequestService = clientRequestService;
     }
 
     @Override
-    public SetExercise addSetExercise(Integer exerciseCount, Integer setCount, Integer exerciseId,Integer programId) {
-        SetExercise setExercise = new SetExercise();
-        setExercise.setExerciseCount(exerciseCount);
-        setExercise.setSetCount(setCount);
-        setExercise.setExerciseId(exerciseId);
+    public void addSetExercise(List<Integer> exerciseCounts, List<Integer> setCounts, List<Integer> exerciseIds, Integer programId, Integer requestId) {
         Program program = programService.findById(programId).orElse(null);
-        setExercise.setProgram(program);
-        setExerciseRepository.save(setExercise);
-        return setExercise;
+        if (program == null) {
+            throw new IllegalArgumentException("Program with ID " + programId + " not found.");
+        }
+
+        int i = 0;
+        for(Integer exerciseCount : exerciseCounts){
+            SetExercise setExercise = new SetExercise();
+            setExercise.setExerciseCount(exerciseCount);
+            setExercise.setSetCount(setCounts.get(i));
+            setExercise.setExerciseId(exerciseIds.get(i));
+            setExercise.setProgram(program);
+            setExerciseRepository.save(setExercise);
+            i++;
+        }
+        clientRequestService.setAsInactive(requestId);
     }
 
     public Map<SetExercise, Exercise> getByProgramId(Integer programId) {

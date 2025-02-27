@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -27,7 +28,15 @@ public class ClientRequestServiceImpl implements ClientRequestService{
     }
 
     @Override
-    public ClientRequest createRequest(ClientRequest clientRequest) {
+    public ClientRequest createRequest(User trainer, User client, ClientRequestPayload clientRequestPayload) {
+        ClientRequest clientRequest = new ClientRequest();
+
+        clientRequest.setId(clientRequestPayload.getId());
+        clientRequest.setTrainer(trainer);
+        clientRequest.setClient(client);
+        clientRequest.setDescription(clientRequestPayload.getDescription());
+        clientRequest.setActive(true);
+
         return clientRequestRepository.save(clientRequest);
     }
 
@@ -43,12 +52,24 @@ public class ClientRequestServiceImpl implements ClientRequestService{
 
     @Override
     public List<ClientRequest> getClientRequestsByTrainer(User trainer) {
-        return clientRequestRepository.findByTrainer(trainer);
+        return clientRequestRepository.findByTrainerAndIsActiveTrue(trainer);
     }
 
     @Override
     public void delete(ClientRequest clientRequest) {
         clientRequestRepository.delete(clientRequest);
+    }
+
+    public void setAsInactive(Integer clientRequestId){
+        Optional<ClientRequest> optionalClientRequest = clientRequestRepository.findById(clientRequestId);
+        if(optionalClientRequest.isPresent()){
+            ClientRequest clientRequest = optionalClientRequest.get();
+            clientRequest.setActive(false);
+            clientRequestRepository.save(clientRequest);
+        }
+        else{
+            System.out.println("No such Client Request");
+        }
     }
 
 }

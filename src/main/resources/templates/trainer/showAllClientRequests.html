@@ -31,7 +31,7 @@
         </span></td>
             <td th:text="${request.description}"></td>
             <td>
-                <form th:action="@{/trainer/writeProgram/{clientId}/{trainerId}(clientId=${request.client.id},trainerId=${request.trainer.id})}" method="get">
+                <form th:action="@{/trainer/writeProgram/{clientId}/{trainerId}/{requestId}(clientId=${request.client.id},trainerId=${request.trainer.id}, requestId=${request.id})}" method="get">
                     <button type="submit" class="pagination-button">Write program</button>
                 </form>
             </td>

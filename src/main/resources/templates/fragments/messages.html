@@ -1,0 +1,10 @@
+<!-- src/main/resources/templates/fragments/messages.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="successMessage" th:if="${successMessage}" class="alert-success" id="successDiv">
+    <p th:text="${successMessage}"></p>
+    <button type="button" onclick="toggleDiv('successDiv')">Close</button>
+</div>
+</body>
+</html>
