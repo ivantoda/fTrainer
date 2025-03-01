@@ -1,6 +1,5 @@
 package com.ftrainer.ftrainer.controllers;
 
-import com.ftrainer.ftrainer.dto.ImagePayload;
 import com.ftrainer.ftrainer.security.SecurityUtils;
 import com.ftrainer.ftrainer.services.ImageService;
 import org.springframework.http.HttpHeaders;

@@ -22,7 +22,6 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
 
             if (token != null) {
                 try {
-
                     Integer userId = JwtUtil.getUserIdFromToken(token);
                     attributes.put("userId", userId);
                     return true;

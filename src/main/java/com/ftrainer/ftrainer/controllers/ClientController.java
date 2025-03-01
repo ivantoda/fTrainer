@@ -1,26 +1,17 @@
 package com.ftrainer.ftrainer.controllers;
 
 import com.ftrainer.ftrainer.dto.ClientRequestPayload;
-import com.ftrainer.ftrainer.dto.ImagePayload;
-import com.ftrainer.ftrainer.dto.ProgramPayload;
 import com.ftrainer.ftrainer.dto.UserPayload;
 import com.ftrainer.ftrainer.entities.*;
-import com.ftrainer.ftrainer.repositories.*;
 import com.ftrainer.ftrainer.security.SecurityUtils;
 import com.ftrainer.ftrainer.services.*;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.security.Security;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -156,5 +147,19 @@ public class ClientController {
         {
             return "redirect:/error";
         }
+    }
+    @PreAuthorize("hasAnyAuthority('CLIENT')")
+    @PostMapping("/deleteProgram/{programId}")
+    public String deleteProgram(@PathVariable Integer programId,
+                                RedirectAttributes redirectAttributes) {
+        Optional<Program> programOptional = programService.findById(programId);
+
+        if (programOptional.isPresent()) {
+            Program program = programOptional.get();
+            programService.delete(program);
+            redirectAttributes.addFlashAttribute("successMessage", "Program deleted!");
+            return "redirect:/client/showClientProgram";
+        }
+        return "redirect:/client/";
     }
 }
