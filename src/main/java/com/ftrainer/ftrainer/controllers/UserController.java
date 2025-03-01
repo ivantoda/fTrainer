@@ -5,6 +5,7 @@ import com.ftrainer.ftrainer.entities.Role;
 import com.ftrainer.ftrainer.entities.User;
 import com.ftrainer.ftrainer.repositories.RoleRepository;
 import com.ftrainer.ftrainer.services.ImageService;
+import com.ftrainer.ftrainer.services.RoleService;
 import com.ftrainer.ftrainer.services.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,26 +21,25 @@ public class UserController {
     private final UserService userService;
 
     private final ImageService imageService;
-    private final RoleRepository roleRepository;
 
-    public UserController(UserService userService, ImageService imageService, RoleRepository roleRepository) {
+    private final RoleService roleService;
+
+    public UserController(UserService userService, ImageService imageService, RoleService roleService) {
         this.userService = userService;
         this.imageService = imageService;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
     }
 
     @GetMapping("/register")
     public String addUserForm(Model model) {
         try {
-            var roles = roleRepository.findAll();
-            roles.remove(0);
+            var roles = roleService.getRoles();
+            System.out.println(roles);
             model.addAttribute("roleOptions", roles);
             model.addAttribute("userPayload", new UserPayload());
             return "user/addUserForm";
-        } catch (SecurityException e) {
-            return "error/unauthorized";
         } catch (Exception e) {
-            return "error/internalServerError";
+            return "error";
         }
     }
 
@@ -82,13 +82,12 @@ public class UserController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'CLIENT', 'TRAINER')")
     @GetMapping("/{id}/editForm")
-    public String editUserForm(@PathVariable("id") Integer id, @ModelAttribute("userPayload") UserPayload userPayload, @ModelAttribute("rolePayload") Role rolePayload, Model model) {
+    public String editUserForm(@PathVariable("id") Integer id, @ModelAttribute("rolePayload") Role rolePayload, Model model) {
         try {
-            userPayload = userService.getUserForEdit(id);
-            var roles = roleRepository.findAll();
-            roles.remove(0);
-            model.addAttribute("roleOptions", roles);
+            UserPayload userPayload = userService.getUserForEdit(id);
+            var roles = roleService.getRoles();
 
+            model.addAttribute("roleOptions", roles);
             model.addAttribute("userPayload", userPayload);
 
             return "user/editUserForm";

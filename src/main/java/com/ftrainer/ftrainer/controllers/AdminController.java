@@ -1,40 +1,24 @@
 package com.ftrainer.ftrainer.controllers;
 
-import com.ftrainer.ftrainer.dto.UserPayload;
 import com.ftrainer.ftrainer.entities.User;
-import com.ftrainer.ftrainer.repositories.RoleRepository;
-import com.ftrainer.ftrainer.repositories.UserRepository;
 import com.ftrainer.ftrainer.security.SecurityUtils;
 import com.ftrainer.ftrainer.services.AdminService;
-import com.ftrainer.ftrainer.services.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
     private final AdminService adminService;
-    private final UserService userService;
 
 
-    public AdminController(AdminService adminService, UserService userService) {
+    public AdminController(AdminService adminService) {
         this.adminService = adminService;
-        this.userService = userService;
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")

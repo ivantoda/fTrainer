@@ -7,7 +7,11 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class WebSocketController {
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
+    public WebSocketController(SimpMessagingTemplate simpMessagingTemplate) {
+        this.simpMessagingTemplate = simpMessagingTemplate;
+    }
 
     public void sendNotification(String message) {
         simpMessagingTemplate.convertAndSend("/topic/notifications", message);

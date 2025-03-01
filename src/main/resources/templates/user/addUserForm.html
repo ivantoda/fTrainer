@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -57,19 +57,19 @@
     <input type="hidden" th:field="*{id}" />
     <div>
         <label for="username">Username: </label>
-            <input type="text" th:field="*{username}" style="margin: 10px;"/>
+            <input id="username" type="text" th:field="*{username}" style="margin: 10px;"/>
     </div>
     <div>
         <label for="firstname">First Name: </label>
-        <input type="text" th:field="*{firstname}" style="margin: 10px;"/>
+        <input id="firstname" type="text" th:field="*{firstname}" style="margin: 10px;"/>
     </div>
     <div>
         <label for="lastname">Last Name: </label>
-        <input type="text" th:field="*{lastname}" style="margin: 10px;"/>
+        <input id = "lastname" type="text" th:field="*{lastname}" style="margin: 10px;"/>
     </div>
     <div>
         <label for="email">Email: </label>
-        <input type="email" th:field="*{email}" style="margin: 10px;"/>
+        <input id = "email" type="email" th:field="*{email}" style="margin: 10px;"/>
     </div>
     <div>
         <label for="password">Password: </label>
@@ -81,10 +81,10 @@
     </div>
     <div>
         <label for="dateOfBirth">Date of birth: </label>
-        <input type="date" th:field="*{dateOfBirth}" id="date" style="margin: 10px;"/>
+        <input id="dateOfBirth" type="date" th:field="*{dateOfBirth}" style="margin: 10px;"/>
     </div>
     <div>
-    <label for="userRole">User Role:</label>
+    <label for="role">User Role:</label>
     <select class="form-select" id="role" th:field="*{userRole}" style="margin: 10px;">
         <option th:each="option: ${roleOptions}"
                 th:text="${option.name}" th:value="${option.name}">

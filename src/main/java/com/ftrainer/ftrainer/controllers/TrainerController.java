@@ -1,6 +1,5 @@
 package com.ftrainer.ftrainer.controllers;
 
-import com.electronwill.nightconfig.core.conversion.Path;
 import com.ftrainer.ftrainer.dto.ExercisePayload;
 import com.ftrainer.ftrainer.entities.*;
 import com.ftrainer.ftrainer.repositories.*;

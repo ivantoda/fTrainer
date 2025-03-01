@@ -8,6 +8,7 @@ import com.ftrainer.ftrainer.repositories.RoleRepository;
 import com.ftrainer.ftrainer.repositories.UserRepository;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Getter
 @Service
@@ -66,18 +68,13 @@ public class ProgramServiceImpl implements ProgramService{
     @Override
     public Map<Program, UserPayload> findProgramsByClient(UserPayload client, String searchKeyWord, Integer pageNo, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, Sort.by("id").ascending());
-        List<Program> programs = programRepository.findByClientId(client.getId());
-        Map<Program, UserPayload> programTrainerMap = new HashMap<>();
+        Page<Program> programs = programRepository.findByClientId(client.getId(), pageable);
 
-        for (Program program: programs) {
-            int trainerId = program.getTrainer().getId();
-            UserPayload trainer = userService.findById2(trainerId);
-            if(searchKeyWord == null || searchKeyWord.isBlank() ||
-                    trainer.getFirstname().toLowerCase().contains(searchKeyWord) ||
-                    trainer.getLastname().toLowerCase().contains(searchKeyWord)){
-                programTrainerMap.put(program,trainer);
-            }
-        }
-        return programTrainerMap;
+        return programs.stream()
+                .map(program -> Map.entry(program, userService.findById2(program.getTrainer().getId())))
+                .filter(entry -> searchKeyWord == null || searchKeyWord.isBlank() ||
+                        entry.getValue().getFirstname().toLowerCase().contains(searchKeyWord) ||
+                        entry.getValue().getLastname().toLowerCase().contains(searchKeyWord))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }
